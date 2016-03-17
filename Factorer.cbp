@@ -36,6 +36,10 @@
 		<Linker>
 			<Add library="gmp" />
 		</Linker>
+		<Unit filename="BruteForceAlgorithm.cpp" />
+		<Unit filename="BruteForceAlgorithm.h" />
+		<Unit filename="MPIAlgorithm.cpp" />
+		<Unit filename="MPIAlgorithm.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
