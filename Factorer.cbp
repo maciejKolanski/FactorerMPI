@@ -40,6 +40,8 @@
 		<Unit filename="BruteForceAlgorithm.h" />
 		<Unit filename="MPIAlgorithm.cpp" />
 		<Unit filename="MPIAlgorithm.h" />
+		<Unit filename="MPIAlgorithmHelper.cpp" />
+		<Unit filename="MPIAlgorithmHelper.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
