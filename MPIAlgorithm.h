@@ -8,16 +8,19 @@
 class MPIAlgorithm
 {
     public:
-        MPIAlgorithm(const std::string& number, int base = 10);
+        MPIAlgorithm(const char* number, int base = 10);
 
         virtual ~MPIAlgorithm(){};
         virtual std::vector<std::string> Master() = 0;
         virtual void Slave() = 0;
     protected:
         mpz_t _value;
-        static constexpr size_t MAX_DIGITS = 10;
 
-        bool getString(mpz_t number, char *ptr, size_t ptrLen = MAX_DIGITS );
+        inline size_t getMaxDigits() const { return maxDigits; };
+        bool getString(mpz_t number, char *ptr ) const;
+        bool getString(mpz_t number, char* ptr, size_t ptrLen ) const;
+    private:
+        size_t maxDigits;
 };
 
 #endif // MPIALGORITHM_H

@@ -1,6 +1,6 @@
 #include "BruteForceAlgorithm.h"
 
-BruteForceAlgorithm::BruteForceAlgorithm(const std::string& value, int base )
+BruteForceAlgorithm::BruteForceAlgorithm(const char* value, int base )
     :MPIAlgorithm(value,base)
     {
         mpz_init(_sqrt_value);
@@ -11,7 +11,7 @@ std::vector<std::string> BruteForceAlgorithm::Master()
 {
     std::vector<std::string> ret;
     int tasksNumber;
-    char buff[MAX_DIGITS];
+    char buff[getMaxDigits()];
     MPI_Comm_size(MPI_COMM_WORLD,&tasksNumber);
     MPI_Status status;
 
@@ -31,25 +31,25 @@ std::vector<std::string> BruteForceAlgorithm::Master()
         while( freeSlaves.size() != 0 && mpz_cmp(current,_sqrt_value) < 0 )
         {
             getString(current,buff);
-            MPI_Send(buff, MAX_DIGITS, MPI_CHAR, *(freeSlaves.end()-1), FIRSTNUM_TAG, MPI_COMM_WORLD);
+            MPI_Send(buff, getMaxDigits(), MPI_CHAR, *(freeSlaves.end()-1), FIRSTNUM_TAG, MPI_COMM_WORLD);
 
             mpz_add(current,current,step);
 
             getString(current,buff);
-            MPI_Send(buff, MAX_DIGITS, MPI_CHAR, *(freeSlaves.end()-1), SECNUM_TAG, MPI_COMM_WORLD);
+            MPI_Send(buff, getMaxDigits(), MPI_CHAR, *(freeSlaves.end()-1), SECNUM_TAG, MPI_COMM_WORLD);
 
             mpz_add_ui(current,current,1);
             freeSlaves.pop_back();
         }
 
-        MPI_Recv(buff,MAX_DIGITS,MPI_CHAR,MPI_ANY_SOURCE, MPI_ANY_TAG,
+        MPI_Recv(buff,getMaxDigits(),MPI_CHAR,MPI_ANY_SOURCE, MPI_ANY_TAG,
             MPI_COMM_WORLD, &status);
 
         switch( status.MPI_TAG)
         {
             case FIRSTRES_TAG:
                 ret.push_back(std::string(buff));
-                MPI_Recv(buff,MAX_DIGITS,MPI_CHAR,status.MPI_SOURCE,SECRES_TAG,
+                MPI_Recv(buff,getMaxDigits(),MPI_CHAR,status.MPI_SOURCE,SECRES_TAG,
                         MPI_COMM_WORLD, &status);
                 ret.push_back(std::string(buff));
                 break;
@@ -71,7 +71,7 @@ std::vector<std::string> BruteForceAlgorithm::Master()
 void BruteForceAlgorithm::Slave()
 {
     MPI_Status status;
-    char buff[MAX_DIGITS];
+    char buff[getMaxDigits()];
     int myrank;
     MPI_Comm_rank (MPI_COMM_WORLD, &myrank);        /* get current process id */
     mpz_t left, right;
@@ -80,7 +80,7 @@ void BruteForceAlgorithm::Slave()
 
     while(true)
     {
-        MPI_Recv(buff,MAX_DIGITS,MPI_CHAR,0, MPI_ANY_TAG,
+        MPI_Recv(buff,getMaxDigits(),MPI_CHAR,0, MPI_ANY_TAG,
             MPI_COMM_WORLD, &status);
 
         switch(status.MPI_TAG)
@@ -91,7 +91,7 @@ void BruteForceAlgorithm::Slave()
             case SECNUM_TAG:
                 mpz_set_str(right,buff,10);
                 runAlgorithm( left, right );
-                MPI_Send(buff,MAX_DIGITS,MPI_CHAR,0,FINNISHED_TAG,MPI_COMM_WORLD);
+                MPI_Send(buff,getMaxDigits(),MPI_CHAR,0,FINNISHED_TAG,MPI_COMM_WORLD);
                 break;
             case DIETAG:
                 printf("Wysłano DIETAG do procesu %d\n",myrank);
@@ -105,7 +105,7 @@ void BruteForceAlgorithm::runAlgorithm(mpz_t left, mpz_t right)
     mpz_t mod, q;
     mpz_init(mod);
     mpz_init(q);
-    char *buff = new char[MAX_DIGITS];
+    char *buff = new char[getMaxDigits()];
 
     while( mpz_cmp(left,right) <= 0 )
     {
@@ -113,10 +113,10 @@ void BruteForceAlgorithm::runAlgorithm(mpz_t left, mpz_t right)
         if(  mpz_cmp_ui(mod,0) == 0 )
         {
             getString(left,buff);
-            MPI_Send(buff,MAX_DIGITS,MPI_CHAR,0,FIRSTRES_TAG,MPI_COMM_WORLD);
+            MPI_Send(buff,getMaxDigits(),MPI_CHAR,0,FIRSTRES_TAG,MPI_COMM_WORLD);
 
             getString(q,buff);
-            MPI_Send(buff,MAX_DIGITS,MPI_CHAR,0,SECRES_TAG,MPI_COMM_WORLD);
+            MPI_Send(buff,getMaxDigits(),MPI_CHAR,0,SECRES_TAG,MPI_COMM_WORLD);
         }
         mpz_add_ui(left,left,1);
     }

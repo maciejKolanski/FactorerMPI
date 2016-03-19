@@ -9,7 +9,7 @@
 class BruteForceAlgorithm : public MPIAlgorithm
 {
     public:
-        BruteForceAlgorithm(const std::string& number, int base = 10 );
+        BruteForceAlgorithm(const char* number, int base = 10 );
         ~BruteForceAlgorithm(){};
 
         std::vector<std::string> Master();
