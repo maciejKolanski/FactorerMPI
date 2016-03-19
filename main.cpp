@@ -11,7 +11,7 @@ int main(int argc, char** argv)
   MPI_Init (&argc, &argv);      /* starts MPI */
   MPI_Comm_rank (MPI_COMM_WORLD, &myrank);        /* get current process id */
 
-  MPIAlgorithm *algo = new BruteForceAlgorithm("21");
+  MPIAlgorithm *algo = new BruteForceAlgorithm("988027");
   std::vector<std::string> returned;
 
   if (myrank == 0 )
@@ -26,8 +26,8 @@ int main(int argc, char** argv)
   MPI_Finalize();
   delete algo;
 
-  for( auto& s : returned )
-    std::cout << "Returned: " << s << "\n";
+  for( size_t i = 1; i < returned.size(); ++i )
+    std::cout << "Returned: " << returned[i-1] << " * " << returned[i] << "\n";
   return 0;
 }
 

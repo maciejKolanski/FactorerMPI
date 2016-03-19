@@ -6,14 +6,11 @@ MPIAlgorithm::MPIAlgorithm(const std::string& number, int base )
     mpz_set_str(_value, number.c_str(), base);
 }
 
-std::string MPIAlgorithm::getString(mpz_t number)
+bool MPIAlgorithm::getString(mpz_t number, char *ptr, size_t ptrLen  )
 {
-    char * buff = new char[mpz_sizeinbase(number, 10) + 2];
-    if( buff == nullptr )
-        return std::string();
+    if( mpz_sizeinbase (number, 10) + 2 > ptrLen )
+        return false;
 
-    mpz_get_str(buff,10,_value);
-    std::string ret(buff);
-    delete buff;
-    return ret;
+    mpz_get_str(ptr,10,number);
+    return true;
 }

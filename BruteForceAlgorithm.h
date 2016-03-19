@@ -15,7 +15,9 @@ class BruteForceAlgorithm : public MPIAlgorithm
         std::vector<std::string> Master();
         void Slave();
     private:
-        enum Tags{ DIETAG, FIRSTNUM_TAG, SECNUM_TAG };
+        void runAlgorithm(mpz_t left, mpz_t right);
+
+        enum Tags{ DIETAG, FIRSTNUM_TAG, SECNUM_TAG, FIRSTRES_TAG, SECRES_TAG, FINNISHED_TAG };
 
         mpz_t _sqrt_value;
 };
