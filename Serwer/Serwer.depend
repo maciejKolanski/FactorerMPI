@@ -1,16 +1,17 @@
 # depslib dependency file v1.0
-1458390510 source:/home/bartosz/Code::Blocks Projects/Serwer/main.cpp
+1458822274 source:/home/bartosz/Code::Blocks Projects/Serwer/main.cpp
 	"CommSocket.h"
 	<iostream>
 
-1458230002 /home/bartosz/Code::Blocks Projects/Serwer/include/CommSocket.h
+1458821928 /home/bartosz/Code::Blocks Projects/Serwer/include/CommSocket.h
 	<cstdio>
 	<cstdlib>
 	<cstring>
 	<cmath>
 	<sys/socket.h>
 	<arpa/inet.h>
+	<unistd.h>
 
-1458389967 source:/home/bartosz/Code::Blocks Projects/Serwer/src/CommSocket.cpp
+1458822069 source:/home/bartosz/Code::Blocks Projects/Serwer/src/CommSocket.cpp
 	"CommSocket.h"
 

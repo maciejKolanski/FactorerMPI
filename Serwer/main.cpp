@@ -3,23 +3,27 @@
 
 int main()
 {
-    CommSocket *comm = new CommSocket(8888);
+    CommSocket *comm = new CommSocket(8050);
 
     char data[64]="";
+    char exit[64]="exit";
 
     while(true)
     {
-        comm->my_receive();
+        if(comm->my_receive())
+            break;
 
         std::cin.getline(data, sizeof(data));
 
-        if(data == "exit")
-            return 0;
+        if(*data == *exit)
+            break;
 
-        comm->my_send(data);
+        if(comm->my_send(data))
+            break;
 
     }
 
+    delete comm;
 
     return 0;
 

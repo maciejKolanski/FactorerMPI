@@ -41,14 +41,20 @@ CommSocket::CommSocket(unsigned port_nr)
 
 CommSocket::~CommSocket()
 {
-    //dtor
+    close(socket_desc);
 }
 
-void CommSocket::my_receive()
+bool CommSocket::my_receive()
 {
     unsigned char size_buffer[4];
 
     bytesReceived = recv(socket_desc, (char*)size_buffer , 4 , 0);
+
+    if(bytesReceived == 0)
+        {
+            close(socket_desc);
+            return 1;
+        }
 
     recv_buffer_size = (size_buffer[0] << 24) | (size_buffer[1] << 16) | (size_buffer[2] << 8 ) | size_buffer[3];
 
@@ -56,7 +62,7 @@ void CommSocket::my_receive()
     {
         puts("recv failed");
         printf("%ld", bytesReceived);
-        return;
+        return 1;
     }
     else
     {
@@ -76,7 +82,7 @@ void CommSocket::my_receive()
     if(bytesSent < 0)
     {
         puts("Command send failed");
-        return;
+        return 1;
     }
     else
     {
@@ -89,16 +95,16 @@ void CommSocket::my_receive()
     {
         puts("recv failed");
         printf("%ld", bytesReceived);
-        return;
+        return 1;
     }
     else
     {
         printf("Packet received : %s \n\n", recv_buffer);
     }
-
+    return 0;
 }
 
-void CommSocket::my_send(char* data)
+bool CommSocket::my_send(char* data)
 {
     long int packet_length = strlen(data);
     char size_buffer[4];
@@ -116,7 +122,7 @@ void CommSocket::my_send(char* data)
     if(bytesSent < 0)
     {
         puts("Packet size send failed");
-        return;
+        return 1;
     }
     else
     {
@@ -129,7 +135,7 @@ void CommSocket::my_send(char* data)
     if(bytesReceived < 0)
     {
         puts("Command receive failed");
-        return;
+        return 1;
     }
     else
     {
@@ -141,11 +147,12 @@ void CommSocket::my_send(char* data)
     if(bytesSent < 0)
     {
         puts("Packet send failed");
-        return;
+        return 1;
     }
     else
     {
         printf("Packet send success\n\n");
     }
 
+    return 0;
 }

@@ -8,6 +8,7 @@
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 class CommSocket
 {
@@ -22,8 +23,8 @@ class CommSocket
          CommSocket(unsigned);
         ~CommSocket();
 
-        void my_receive();
-        void my_send(char*);
+        bool my_receive();
+        bool my_send(char*);
 
 };
 
