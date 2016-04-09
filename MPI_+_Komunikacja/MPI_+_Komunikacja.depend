@@ -1,0 +1,46 @@
+# depslib dependency file v1.0
+1459334933 source:/home/bartosz/Code::Blocks Projects/MPI_+_Komunikacja/BruteForceAlgorithm.cpp
+	"BruteForceAlgorithm.h"
+	<string.h>
+
+1459334933 /home/bartosz/Code::Blocks Projects/MPI_+_Komunikacja/BruteForceAlgorithm.h
+	<mpi/mpi.h>
+	<gmp.h>
+	"MPIAlgorithm.h"
+
+1459334933 /home/bartosz/Code::Blocks Projects/MPI_+_Komunikacja/MPIAlgorithm.h
+	<gmp.h>
+	<string>
+	<vector>
+	<mpi.h>
+
+1460223851 source:/home/bartosz/Code::Blocks Projects/MPI_+_Komunikacja/CommSocket.cpp
+	"CommSocket.h"
+
+1460216680 /home/bartosz/Code::Blocks Projects/MPI_+_Komunikacja/CommSocket.h
+	<iostream>
+	<cstdio>
+	<cstdlib>
+	<cstring>
+	<cmath>
+	<sys/socket.h>
+	<arpa/inet.h>
+	<unistd.h>
+
+1460239585 source:/home/bartosz/Code::Blocks Projects/MPI_+_Komunikacja/main.cpp
+	<iostream>
+	<string.h>
+	<mpi.h>
+	<pthread.h>
+	"MPIAlgorithmHelper.h"
+	"CommSocket.h"
+
+1459334933 /home/bartosz/Code::Blocks Projects/MPI_+_Komunikacja/MPIAlgorithmHelper.h
+	"BruteForceAlgorithm.h"
+
+1459334933 source:/home/bartosz/Code::Blocks Projects/MPI_+_Komunikacja/MPIAlgorithm.cpp
+	"MPIAlgorithm.h"
+
+1459334933 source:/home/bartosz/Code::Blocks Projects/MPI_+_Komunikacja/MPIAlgorithmHelper.cpp
+	"MPIAlgorithmHelper.h"
+
