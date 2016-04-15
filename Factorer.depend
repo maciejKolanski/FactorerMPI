@@ -1,0 +1,73 @@
+# depslib dependency file v1.0
+1460738166 source:/home/maciejkolanski/dev/code/MPI/Factorer/main.cpp
+	<iostream>
+	<string.h>
+	<mpi.h>
+	<memory>
+	"MPIAlgorithmHelper.h"
+	"MySQLFactorerCommunicator.h"
+	"CmdFactorerCommunicator.h"
+
+1457987512 source:/home/maciejkolanski/dev/code/MPI/Factorer/bigint.cpp
+	"bigint.h"
+	<vector>
+
+1457987452 /home/maciejkolanski/dev/code/MPI/Factorer/bigint.h
+	<vector>
+	<cstdlib>
+	<string>
+
+1460737657 source:/home/maciejkolanski/dev/code/MPI/Factorer/BruteForceAlgorithm.cpp
+	"BruteForceAlgorithm.h"
+	<string.h>
+
+1458423955 /home/maciejkolanski/dev/code/MPI/Factorer/BruteForceAlgorithm.h
+	<mpi/mpi.h>
+	<gmp.h>
+	"MPIAlgorithm.h"
+
+1460737657 /home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithm.h
+	<gmp.h>
+	<string>
+	<vector>
+	<mpi.h>
+
+1458423955 source:/home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithm.cpp
+	"MPIAlgorithm.h"
+
+1458423955 source:/home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithmHelper.cpp
+	"MPIAlgorithmHelper.h"
+
+1458423955 /home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithmHelper.h
+	"BruteForceAlgorithm.h"
+
+1460737657 source:/home/maciejkolanski/dev/code/MPI/Factorer/CmdFactorerCommunicator.cpp
+	"CmdFactorerCommunicator.h"
+
+1460737657 /home/maciejkolanski/dev/code/MPI/Factorer/CmdFactorerCommunicator.h
+	<iostream>
+	"FactorerCommunicatorInterface.h"
+
+1460737657 /home/maciejkolanski/dev/code/MPI/Factorer/FactorerCommunicatorInterface.h
+	<string>
+	<vector>
+	<exception>
+	<string>
+	"MPIAlgorithm.h"
+
+1460737657 source:/home/maciejkolanski/dev/code/MPI/Factorer/MySQLFactorerCommunicator.cpp
+	"MySQLFactorerCommunicator.h"
+	<stdlib.h>
+	<iostream>
+	<unistd.h>
+
+1460737657 /home/maciejkolanski/dev/code/MPI/Factorer/MySQLFactorerCommunicator.h
+	<memory>
+	"FactorerCommunicatorInterface.h"
+	"mysql_connection.h"
+	<cppconn/driver.h>
+	<cppconn/exception.h>
+	<cppconn/resultset.h>
+	<cppconn/statement.h>
+	<cppconn/prepared_statement.h>
+
