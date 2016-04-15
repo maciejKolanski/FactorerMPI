@@ -9,7 +9,7 @@
 class MPIAlgorithm
 {
     public:
-        enum AlgorithmsEnum {None,BruteForce};
+        enum AlgorithmsEnum {None, BruteForce = 2};
         enum Tags {EMPTYTAG,DIETAG,SETALGO_TAG};
 
         virtual ~MPIAlgorithm(){};

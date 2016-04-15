@@ -23,7 +23,7 @@ std::vector<std::string> BruteForceAlgorithm::Master(const char* value)
         int tmp = mpz_get_ui(sqrt_value)-1;
         tasksNumber = (tmp > 1) ? tmp : 2;
     }
-    printf("urchomiono na %d watkach\n", tasksNumber);
+    printf("uruchomiono na %d watkach\n", tasksNumber);
     mpz_cdiv_q_ui(step,sqrt_value,tasksNumber-1);
 
     std::vector<int> freeSlaves;
@@ -139,14 +139,14 @@ void BruteForceAlgorithm::runSlaveAlgorithm(mpz_t left, mpz_t right)
 void BruteForceAlgorithm::initSlaves(std::vector<int>& freeSlaves, size_t numberOfSlaves )
 {
     size_t vSize = getMaxDigits();
-    char* valueBuff = new char[vSize];
+    char *valueBuff = new char[vSize];
     AlgorithmsEnum algoE = BruteForce;
     getString(_value,valueBuff);
 
     for(size_t i = 1; i < numberOfSlaves; ++i )
     {
-        MPI_Send(&algoE,1,MPI_INT,i,MPIAlgorithm::SETALGO_TAG,MPI_COMM_WORLD);
-        MPI_Send(&vSize,1,MPI_INT,i,SETVALUESIZE_TAG,MPI_COMM_WORLD);
+        MPI_Send(&algoE, 1,MPI_INT, i,MPIAlgorithm::SETALGO_TAG,MPI_COMM_WORLD);
+        MPI_Send(&vSize,1, MPI_INT,i, SETVALUESIZE_TAG, MPI_COMM_WORLD);
         MPI_Send(valueBuff,getMaxDigits(),MPI_CHAR,i,SETVALUE_TAG,MPI_COMM_WORLD);
         freeSlaves.push_back(i);
     }

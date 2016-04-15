@@ -1,34 +1,48 @@
 #include <iostream>
 #include <string.h>
 #include <mpi.h>
+#include <memory>
 
 #include "MPIAlgorithmHelper.h"
+#include "MySQLFactorerCommunicator.h"
+using namespace std;
 
-void RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoEm, const char* valueStr);
+vector<string> RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoEm, const char* valueStr);
+bool Init(int *argc, char ***argv, int *myRank);
 
 int main(int argc, char** argv)
 {
-     MPI_Init (&argc, &argv);
-     int myrank;
-     MPI_Comm_rank (MPI_COMM_WORLD, &myrank);
-
-    if( myrank == 0 )
+    int myRank;
+    if( Init(&argc, &argv, &myRank) == false )
     {
-        bool endFlag = false;
-        std::string command, valueStr;
-        do{
-            getline(std::cin, command); //Te getline to pole do popisu dla komunikacji przez sockety
+        cerr << "Program wymaga przynajmniej 2 watkow!\n";
+        MPI_Finalize();
+        return 1;
+    }
 
-            if( command == "bruteforce" )
+    if( myRank == 0 )
+    {
+        try{
+        unique_ptr<FactorerCommunicatorInterface> communicator(
+            new MySQLFactorerCommunicator("156.17.235.48","3306","projekt","projekt","factorDB"));
+        CommunicatorCommand communicatorCommand;
+        MPIAlgorithm::AlgorithmsEnum algorithm;
+        string valueStr;
+
+        do{
+            communicatorCommand = communicator->getCommand(algorithm, valueStr);
+            if( communicatorCommand == CommunicatorCommand::Algorithm )
             {
-                getline(std::cin, valueStr);
-                RunAlgorithm(MPIAlgorithm::BruteForce,valueStr.c_str()); // wystarczy wyowolac te metode
+                auto result = RunAlgorithm(algorithm, valueStr.c_str());
+                communicator->algorithmFinnished(result);
             }
-            else if( command == "quit" )
-            {
-                endFlag = true;
-            }
-        }while( false == endFlag );
+        }while(communicatorCommand != CommunicatorCommand::Quit);
+
+        }
+        catch( FactorerCommunicatorException& fExc )
+        {
+            cerr << fExc.what();
+        }
 
         SendDieMessageToAll();
     }
@@ -41,17 +55,29 @@ int main(int argc, char** argv)
     return 0;
 }
 
-void RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoE, const char* valueStr )
+vector<string> RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoE, const char* valueStr )
 {
     MPIAlgorithm *algo = GetAlgorithm(algoE);
 
     auto returned = algo->Master(valueStr);
     delete algo;
 
-    for( size_t i = 1; i < returned.size(); i += 2 )
-        std::cout << "Returned: " << returned[i-1] << " * " << returned[i] << "\n";
-    if( returned.size() == 0 )
-        std::cout << "To jest liczba pierwsza!\n";
+    return returned;
 }
 
+bool Init(int *argc, char ***argv, int *myRank)
+{
+     int commSize;
+     MPI_Init (argc, argv);
+     MPI_Comm_rank (MPI_COMM_WORLD, myRank);
 
+     MPI_Comm_size(MPI_COMM_WORLD, &commSize);
+     if( commSize < 2 )
+     {
+        return false;
+     }
+     else
+     {
+        return true;
+     }
+}
