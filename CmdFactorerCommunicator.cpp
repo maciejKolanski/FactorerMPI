@@ -1,5 +1,12 @@
 #include "CmdFactorerCommunicator.h"
 
+CmdFactorerCommunicator::CmdFactorerCommunicator()
+{
+    std::cout << "Uruchomiono w trybie cmd\n Dostepne komendy:\n\tbruteforce(ENTER)liczba" <<
+    "\n\tquit\n";
+}
+
+
 CommunicatorCommand CmdFactorerCommunicator::getCommand(MPIAlgorithm::AlgorithmsEnum &algorithm, std::string &number)
 {
     std::string commandStr;

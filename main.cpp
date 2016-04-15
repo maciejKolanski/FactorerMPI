@@ -5,10 +5,12 @@
 
 #include "MPIAlgorithmHelper.h"
 #include "MySQLFactorerCommunicator.h"
+#include "CmdFactorerCommunicator.h"
 using namespace std;
 
 vector<string> RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoEm, const char* valueStr);
 bool Init(int *argc, char ***argv, int *myRank);
+FactorerCommunicatorInterface *InitCommunicator(int argc, char ** argv);
 
 int main(int argc, char** argv)
 {
@@ -23,8 +25,7 @@ int main(int argc, char** argv)
     if( myRank == 0 )
     {
         try{
-        unique_ptr<FactorerCommunicatorInterface> communicator(
-            new MySQLFactorerCommunicator("156.17.235.48","3306","projekt","projekt","factorDB"));
+        unique_ptr<FactorerCommunicatorInterface> communicator(InitCommunicator(argc, argv));
         CommunicatorCommand communicatorCommand;
         MPIAlgorithm::AlgorithmsEnum algorithm;
         string valueStr;
@@ -80,4 +81,22 @@ bool Init(int *argc, char ***argv, int *myRank)
      {
         return true;
      }
+}
+
+FactorerCommunicatorInterface *InitCommunicator(int argc, char ** argv)
+{
+    FactorerCommunicatorInterface *retInterface = nullptr;
+    if( argc > 1 )
+    {
+        if( strcmp(argv[1],"cmd") == 0)
+        {
+            retInterface = new CmdFactorerCommunicator;
+        }
+    }
+    else
+    {
+        retInterface = new MySQLFactorerCommunicator("156.17.235.48","3306","projekt","projekt","factorDB");
+    }
+
+    return retInterface;
 }

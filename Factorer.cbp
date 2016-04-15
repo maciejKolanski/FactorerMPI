@@ -37,14 +37,19 @@
 		<Linker>
 			<Add library="/usr/local/lib/libgmp.a" />
 			<Add library="mpich" />
+			<Add library="mysqlcppconn" />
 		</Linker>
 		<Unit filename="BruteForceAlgorithm.cpp" />
 		<Unit filename="BruteForceAlgorithm.h" />
+		<Unit filename="CmdFactorerCommunicator.cpp" />
+		<Unit filename="CmdFactorerCommunicator.h" />
 		<Unit filename="FactorerCommunicatorInterface.h" />
 		<Unit filename="MPIAlgorithm.cpp" />
 		<Unit filename="MPIAlgorithm.h" />
 		<Unit filename="MPIAlgorithmHelper.cpp" />
 		<Unit filename="MPIAlgorithmHelper.h" />
+		<Unit filename="MySQLFactorerCommunicator.cpp" />
+		<Unit filename="MySQLFactorerCommunicator.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

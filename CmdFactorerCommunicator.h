@@ -8,7 +8,8 @@
 class CmdFactorerCommunicator : public FactorerCommunicatorInterface
 {
     public:
-        virtual ~CmdFactorerCommunicator() {};
+    CmdFactorerCommunicator();
+    virtual ~CmdFactorerCommunicator() {};
     CommunicatorCommand getCommand(MPIAlgorithm::AlgorithmsEnum &algorithm, std::string &number );
     virtual void algorithmFinnished(const std::vector<std::string> &result);
     private:
