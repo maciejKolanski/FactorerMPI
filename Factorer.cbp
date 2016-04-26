@@ -35,15 +35,24 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Linker>
-			<Add library="/usr/local/lib/libgmp.a" />
+			<Add option="-static-libgcc" />
+			<Add library="gmp" />
 			<Add library="mpich" />
-			<Add library="mysqlcppconn" />
+			<Add library="mysqlcppconn-static" />
+			<Add library="/usr/lib/x86_64-linux-gnu/libmysqlclient.a" />
+			<Add library="dl" />
+			<Add library="z" />
+			<Add library="m" />
+			<Add library="pthread" />
+			<Add library="cr" />
 		</Linker>
 		<Unit filename="BruteForceAlgorithm.cpp" />
 		<Unit filename="BruteForceAlgorithm.h" />
 		<Unit filename="CmdFactorerCommunicator.cpp" />
 		<Unit filename="CmdFactorerCommunicator.h" />
 		<Unit filename="FactorerCommunicatorInterface.h" />
+		<Unit filename="Logger.cpp" />
+		<Unit filename="Logger.h" />
 		<Unit filename="MPIAlgorithm.cpp" />
 		<Unit filename="MPIAlgorithm.h" />
 		<Unit filename="MPIAlgorithmHelper.cpp" />

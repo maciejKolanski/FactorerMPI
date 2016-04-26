@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <mpi.h>
+#include "Logger.h"
 
 class MPIAlgorithm
 {
@@ -12,11 +13,13 @@ class MPIAlgorithm
         enum AlgorithmsEnum {None, BruteForce = 2};
         enum Tags {EMPTYTAG,DIETAG,SETALGO_TAG};
 
+        MPIAlgorithm(Logger &a_logger);
         virtual ~MPIAlgorithm(){};
         virtual std::vector<std::string> Master(const char* value) = 0;
         virtual int Slave() = 0;
 
     protected:
+        Logger &logger;
         mpz_t _value;
         size_t base;
         static constexpr int DEFAULT_BASE = 10;

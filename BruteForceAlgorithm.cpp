@@ -1,8 +1,9 @@
 #include "BruteForceAlgorithm.h"
-#include <string.h>
+#include <string>
 
 std::vector<std::string> BruteForceAlgorithm::Master(const char* value)
 {
+    logger.write("Master brute force initalizing number to factor...");
     SetValue(value,DEFAULT_BASE);
 
     std::vector<std::string> ret;
@@ -10,6 +11,9 @@ std::vector<std::string> BruteForceAlgorithm::Master(const char* value)
     char *buff = new char[getMaxDigits()];
     MPI_Comm_size(MPI_COMM_WORLD,&tasksNumber);
     MPI_Status status;
+
+    getString(_value, buff);
+    logger << "Master brute force algorithm initialized with value: " << buff << "\n";
 
     mpz_t step, current,sqrt_value;
     mpz_init(step);
@@ -23,11 +27,12 @@ std::vector<std::string> BruteForceAlgorithm::Master(const char* value)
         int tmp = mpz_get_ui(sqrt_value)-1;
         tasksNumber = (tmp > 1) ? tmp : 2;
     }
-    printf("uruchomiono na %d watkach\n", tasksNumber);
     mpz_cdiv_q_ui(step,sqrt_value,tasksNumber-1);
 
     std::vector<int> freeSlaves;
     initSlaves(freeSlaves,tasksNumber);
+
+    logger.write("Master brute force slaves initialized");
 
     while( mpz_cmp(current,sqrt_value) <= 0 || freeSlaves.size() != tasksNumber-1 )
     {
@@ -35,11 +40,15 @@ std::vector<std::string> BruteForceAlgorithm::Master(const char* value)
         {
             getString(current,buff);
             MPI_Send(buff, getMaxDigits(), MPI_CHAR, *(freeSlaves.end()-1), FIRSTNUM_TAG, MPI_COMM_WORLD);
+            logger << "Master brute force, value " << buff
+                        << " sent as first number to slave" << *(freeSlaves.end()-1) << "\n";
 
             mpz_add(current,current,step);
 
             getString(current,buff);
             MPI_Send(buff, getMaxDigits(), MPI_CHAR, *(freeSlaves.end()-1), SECNUM_TAG, MPI_COMM_WORLD);
+            logger << "Master brute force, value " << buff
+                        << " sent as second number to slave" << *(freeSlaves.end()-1) << "\n";
 
             mpz_add_ui(current,current,1);
             freeSlaves.pop_back();
@@ -52,12 +61,19 @@ std::vector<std::string> BruteForceAlgorithm::Master(const char* value)
         {
             case FIRSTRES_TAG:
                 ret.push_back(std::string(buff));
+                logger << "Master brute force received from " << status.MPI_SOURCE
+                        << " value " << buff << " as first result\n";
+
                 MPI_Recv(buff,getMaxDigits(),MPI_CHAR,status.MPI_SOURCE,SECRES_TAG,
                         MPI_COMM_WORLD, &status);
                 ret.push_back(std::string(buff));
+
+                logger << "Master brute force received from " << status.MPI_SOURCE
+                        << " value " << buff << " as second result\n";
                 break;
             case FINNISHED_TAG:
                 freeSlaves.push_back(status.MPI_SOURCE);
+                logger << "Master brute force received finnish tag from" << status.MPI_SOURCE << "\n";
                 break;
         }
     }
@@ -66,6 +82,7 @@ std::vector<std::string> BruteForceAlgorithm::Master(const char* value)
     for( int rank = 1; rank < tasksNumber; ++rank )
         MPI_Send(0, 0, MPI_INT, rank, EMPTYTAG, MPI_COMM_WORLD);
 
+    logger << "Master brute force finnished\n";
     delete buff;
     return ret;
 }

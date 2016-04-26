@@ -1,16 +1,16 @@
 #include "MPIAlgorithmHelper.h"
 
-MPIAlgorithm* GetAlgorithm(MPIAlgorithm::AlgorithmsEnum algorithms)
+MPIAlgorithm* GetAlgorithm(MPIAlgorithm::AlgorithmsEnum algorithms, Logger &logger)
 {
     switch(algorithms)
     {
         case MPIAlgorithm::BruteForce:
-            return new BruteForceAlgorithm;
+            return new BruteForceAlgorithm(logger);
     }
     return nullptr;
 }
 
-void SlaveWait()
+void SlaveWait(Logger &logger)
 {
     MPIAlgorithm::AlgorithmsEnum algoE;
     MPI_Status status;
@@ -21,7 +21,7 @@ void SlaveWait()
         {
             case MPIAlgorithm::SETALGO_TAG:
             {
-                MPIAlgorithm *algo = GetAlgorithm(algoE);
+                MPIAlgorithm *algo = GetAlgorithm(algoE, logger);
                 algo->Slave();
                 delete algo;
                 break;

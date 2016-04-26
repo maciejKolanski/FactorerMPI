@@ -3,8 +3,8 @@
 
 #include "BruteForceAlgorithm.h"
 
-MPIAlgorithm* GetAlgorithm(MPIAlgorithm::AlgorithmsEnum algorithms);
-void SlaveWait();
+MPIAlgorithm* GetAlgorithm(MPIAlgorithm::AlgorithmsEnum algorithms, Logger &logger);
+void SlaveWait(Logger &logger);
 void SendDieMessageToAll();
 
 #endif

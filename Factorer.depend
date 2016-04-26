@@ -1,9 +1,10 @@
 # depslib dependency file v1.0
-1460738166 source:/home/maciejkolanski/dev/code/MPI/Factorer/main.cpp
+1460996012 source:/home/maciejkolanski/dev/code/MPI/Factorer/main.cpp
 	<iostream>
 	<string.h>
 	<mpi.h>
 	<memory>
+	"Logger.h"
 	"MPIAlgorithmHelper.h"
 	"MySQLFactorerCommunicator.h"
 	"CmdFactorerCommunicator.h"
@@ -17,28 +18,29 @@
 	<cstdlib>
 	<string>
 
-1460737657 source:/home/maciejkolanski/dev/code/MPI/Factorer/BruteForceAlgorithm.cpp
+1460999572 source:/home/maciejkolanski/dev/code/MPI/Factorer/BruteForceAlgorithm.cpp
 	"BruteForceAlgorithm.h"
-	<string.h>
+	<string>
 
-1458423955 /home/maciejkolanski/dev/code/MPI/Factorer/BruteForceAlgorithm.h
+1460995801 /home/maciejkolanski/dev/code/MPI/Factorer/BruteForceAlgorithm.h
 	<mpi/mpi.h>
 	<gmp.h>
 	"MPIAlgorithm.h"
 
-1460737657 /home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithm.h
+1460996133 /home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithm.h
 	<gmp.h>
 	<string>
 	<vector>
 	<mpi.h>
+	"Logger.h"
 
-1458423955 source:/home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithm.cpp
+1460996151 source:/home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithm.cpp
 	"MPIAlgorithm.h"
 
-1458423955 source:/home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithmHelper.cpp
+1460995991 source:/home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithmHelper.cpp
 	"MPIAlgorithmHelper.h"
 
-1458423955 /home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithmHelper.h
+1460996026 /home/maciejkolanski/dev/code/MPI/Factorer/MPIAlgorithmHelper.h
 	"BruteForceAlgorithm.h"
 
 1460737657 source:/home/maciejkolanski/dev/code/MPI/Factorer/CmdFactorerCommunicator.cpp
@@ -48,14 +50,14 @@
 	<iostream>
 	"FactorerCommunicatorInterface.h"
 
-1460737657 /home/maciejkolanski/dev/code/MPI/Factorer/FactorerCommunicatorInterface.h
+1460992801 /home/maciejkolanski/dev/code/MPI/Factorer/FactorerCommunicatorInterface.h
 	<string>
 	<vector>
 	<exception>
 	<string>
 	"MPIAlgorithm.h"
 
-1460737657 source:/home/maciejkolanski/dev/code/MPI/Factorer/MySQLFactorerCommunicator.cpp
+1460738466 source:/home/maciejkolanski/dev/code/MPI/Factorer/MySQLFactorerCommunicator.cpp
 	"MySQLFactorerCommunicator.h"
 	<stdlib.h>
 	<iostream>
@@ -70,4 +72,11 @@
 	<cppconn/resultset.h>
 	<cppconn/statement.h>
 	<cppconn/prepared_statement.h>
+
+1460997820 source:/home/maciejkolanski/dev/code/MPI/Factorer/Logger.cpp
+	"Logger.h"
+
+1460997371 /home/maciejkolanski/dev/code/MPI/Factorer/Logger.h
+	<string>
+	<iostream>
 

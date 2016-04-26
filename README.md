@@ -1,4 +1,6 @@
 # FactorerMPI
+## LINKOWANE BIBLIOTEKI
+gmp mpich mysqlcppconn-static SCIEZKA/libmysqlclient.a dl z m pthread cr
 
 Do stworzenia projektu wykorzystano CodeBlocks 16.01
 

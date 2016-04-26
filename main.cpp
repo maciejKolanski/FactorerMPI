@@ -3,21 +3,23 @@
 #include <mpi.h>
 #include <memory>
 
+#include "Logger.h"
 #include "MPIAlgorithmHelper.h"
 #include "MySQLFactorerCommunicator.h"
 #include "CmdFactorerCommunicator.h"
 using namespace std;
 
-vector<string> RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoEm, const char* valueStr);
+vector<string> RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoEm, const char* valueStr, Logger &logger );
 bool Init(int *argc, char ***argv, int *myRank);
 FactorerCommunicatorInterface *InitCommunicator(int argc, char ** argv);
 
 int main(int argc, char** argv)
 {
+    Logger logger;
     int myRank;
     if( Init(&argc, &argv, &myRank) == false )
     {
-        cerr << "Program wymaga przynajmniej 2 watkow!\n";
+        logger.write("Program must be run with at least 2 threads. Use mpirun -np 2.", Logger::Fatal);
         MPI_Finalize();
         return 1;
     }
@@ -30,11 +32,17 @@ int main(int argc, char** argv)
         MPIAlgorithm::AlgorithmsEnum algorithm;
         string valueStr;
 
+        logger.write("Master main loop begins.");
         do{
             communicatorCommand = communicator->getCommand(algorithm, valueStr);
+            logger.write(std::string("Master got command "+
+                        FactorerCommunicatorInterface::commandAsString(communicatorCommand)));
             if( communicatorCommand == CommunicatorCommand::Algorithm )
             {
-                auto result = RunAlgorithm(algorithm, valueStr.c_str());
+                logger.write(std::string("Running algorithm for " + valueStr));
+                auto result = RunAlgorithm(algorithm, valueStr.c_str(), logger);
+
+                logger.write("Algorithm finnished");
                 communicator->algorithmFinnished(result);
             }
         }while(communicatorCommand != CommunicatorCommand::Quit);
@@ -42,23 +50,24 @@ int main(int argc, char** argv)
         }
         catch( FactorerCommunicatorException& fExc )
         {
-            cerr << fExc.what();
+            logger.write(fExc.what(), Logger::Fatal);
         }
+        logger.write("Master main loop finnished");
 
         SendDieMessageToAll();
     }
     else
     {
-        SlaveWait();
+        SlaveWait(logger);
     }
 
     MPI_Finalize();
     return 0;
 }
 
-vector<string> RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoE, const char* valueStr )
+vector<string> RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoE, const char* valueStr, Logger &logger )
 {
-    MPIAlgorithm *algo = GetAlgorithm(algoE);
+    MPIAlgorithm *algo = GetAlgorithm(algoE, logger);
 
     auto returned = algo->Master(valueStr);
     delete algo;

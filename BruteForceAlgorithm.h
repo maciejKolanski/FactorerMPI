@@ -9,6 +9,7 @@
 class BruteForceAlgorithm : public MPIAlgorithm
 {
     public:
+        BruteForceAlgorithm(Logger &a_logger):MPIAlgorithm(a_logger){};
         ~BruteForceAlgorithm(){};
 
     private:

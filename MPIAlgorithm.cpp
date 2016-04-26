@@ -1,5 +1,9 @@
 #include "MPIAlgorithm.h"
 
+MPIAlgorithm::MPIAlgorithm(Logger &a_logger)
+    :logger(a_logger)
+    {};
+
 void MPIAlgorithm::SetValue(const char* number, int _base )
 {
     if( ! (_base > 1 && _base < 63) )

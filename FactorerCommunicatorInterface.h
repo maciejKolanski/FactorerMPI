@@ -16,6 +16,23 @@ public:
 
     virtual CommunicatorCommand getCommand(MPIAlgorithm::AlgorithmsEnum &algorithm, std::string &number ) = 0;
     virtual void algorithmFinnished(const std::vector<std::string> &result) = 0;
+
+    static std::string commandAsString(CommunicatorCommand command)
+    {
+        std::string ret;
+
+        switch( command )
+        {
+            case Quit:
+                ret = "Quit";
+                break;
+            case Algorithm:
+                ret = "Algorithm";
+                break;
+        }
+
+    return ret;
+}
 };
 
 class FactorerCommunicatorException : public std::exception
