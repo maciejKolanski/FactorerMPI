@@ -2,7 +2,7 @@
 
 CmdFactorerCommunicator::CmdFactorerCommunicator()
 {
-    std::cout << "Uruchomiono w trybie cmd\n Dostepne komendy:\n\tbruteforce(ENTER)liczba" <<
+    std::cout << "Uruchomiono w trybie cmd\n Dostepne komendy:\n\tbruteforce(ENTER)liczba\n\tcfrac(ENTER)liczba" <<
     "\n\tquit\n";
 }
 
@@ -20,6 +20,12 @@ CommunicatorCommand CmdFactorerCommunicator::getCommand(MPIAlgorithm::Algorithms
         if(commandStr.compare("bruteforce") == 0)
         {
             algorithm = MPIAlgorithm::BruteForce;
+            getline(std::cin, number);
+            communicatorCommand = Algorithm;
+        }
+        else if(commandStr.compare("cfrac") == 0)
+        {
+            algorithm = MPIAlgorithm::Cfrac;
             getline(std::cin, number);
             communicatorCommand = Algorithm;
         }

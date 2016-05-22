@@ -1,4 +1,5 @@
 #include "MPIAlgorithmHelper.h"
+#include "CfracAlgorithm.h"
 
 MPIAlgorithm* GetAlgorithm(MPIAlgorithm::AlgorithmsEnum algorithms, Logger &logger)
 {
@@ -6,6 +7,8 @@ MPIAlgorithm* GetAlgorithm(MPIAlgorithm::AlgorithmsEnum algorithms, Logger &logg
     {
         case MPIAlgorithm::BruteForce:
             return new BruteForceAlgorithm(logger);
+        case MPIAlgorithm::Cfrac:
+            return new CfracAlgorithm(logger);
     }
     return nullptr;
 }

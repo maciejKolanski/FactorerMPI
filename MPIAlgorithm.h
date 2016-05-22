@@ -10,7 +10,7 @@
 class MPIAlgorithm
 {
     public:
-        enum AlgorithmsEnum {None, BruteForce = 2,Cfrac};
+        enum AlgorithmsEnum {None, BruteForce = 1,Cfrac};
         enum Tags {EMPTYTAG,DIETAG,SETALGO_TAG};
 
         MPIAlgorithm(Logger &a_logger);

@@ -4,6 +4,9 @@
 #include <stdlib.h>
 #include <limits.h>
 
+CfracAlgorithm::CfracAlgorithm(Logger &a_logger)
+    :MPIAlgorithm(a_logger)
+    {}
 
 std::vector<std::string> CfracAlgorithm::Master(const char* value)
 {
@@ -38,7 +41,7 @@ std::vector<std::string> CfracAlgorithm::Master(const char* value)
     bool lastprimefound = false;
     int primes;
 
-    printf("Urchomiono Algorytm Cfrac na %d watkach\n", tasksNumber);
+    logger << "Uruchomiono Algorytm Cfrac na " << tasksNumber <<" watkach" << "\n";
 
 
     //inicjalizacja Slaves

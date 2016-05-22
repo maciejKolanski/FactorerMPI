@@ -7,6 +7,7 @@
 class CfracAlgorithm : public MPIAlgorithm
 {
     public:
+        CfracAlgorithm(Logger &a_logger);
         ~CfracAlgorithm(){};
 
     private:
