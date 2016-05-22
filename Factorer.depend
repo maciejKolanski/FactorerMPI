@@ -80,3 +80,10 @@
 	<string>
 	<iostream>
 
+1460997820 source:/home/maciejkolanski/code/MPI/Factorer/Logger.cpp
+	"Logger.h"
+
+1460997371 /home/maciejkolanski/code/MPI/Factorer/Logger.h
+	<string>
+	<iostream>
+
