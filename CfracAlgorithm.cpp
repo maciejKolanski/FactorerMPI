@@ -4,12 +4,6 @@
 #include <stdlib.h>
 #include <limits.h>
 
-//bruta ogarnac zeby dobrze wpisywal
-//najlepiej zeby dla kazdego K dal szanse
-//i dobre popy
-
-//gdzies blad w slave - problem z buforem
-//mozliwe ze wywalic wielkosc bufoa wysyl i dac staly na max
 
 std::vector<std::string> CfracAlgorithm::Master(const char* value)
 {
@@ -58,6 +52,7 @@ std::vector<std::string> CfracAlgorithm::Master(const char* value)
     {
         while(!lastprimefound)
         {
+            //podglad kolejek
             /*printf("Zawartosc NumberQUE: ");
             for( size_t i = 0; i < numberQue.size(); i ++ )
                 std::cout<<" "<<numberQue[i];
