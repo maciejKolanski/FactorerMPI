@@ -190,8 +190,8 @@ std::vector<std::string> CfracAlgorithm::Master(const char* value)
         }
     }
 
-    /*for( size_t i = 0; i < ret.size(); i ++ )
-        std::cout << "Returned: " << ret[i] << " * \n";*/
+    for( size_t i = 0; i < ret.size(); i ++ )
+        std::cout << "Returned: " << ret[i] << " * \n";
 
 
     for( int rank = 1; rank < tasksNumber; ++rank )

@@ -1,7 +1,8 @@
 #include "MPIAlgorithm.h"
 
 MPIAlgorithm::MPIAlgorithm(Logger &a_logger)
-    :logger(a_logger)
+    :logger(a_logger),
+     maxDigits(0)
     {};
 
 void MPIAlgorithm::SetValue(const char* number, int _base )
@@ -12,7 +13,10 @@ void MPIAlgorithm::SetValue(const char* number, int _base )
     base = _base;
     mpz_init(_value);
     mpz_set_str(_value, number, base);
-    maxDigits = mpz_sizeinbase(_value, base)+2;
+    if(maxDigits < (mpz_sizeinbase(_value, base)+2))
+        maxDigits = mpz_sizeinbase(_value, base)+2;
+    if(maxDigits < 8)
+        maxDigits = 8;
 }
 
 

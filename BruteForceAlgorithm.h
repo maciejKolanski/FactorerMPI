@@ -14,9 +14,11 @@ class BruteForceAlgorithm : public MPIAlgorithm
 
     private:
         std::vector<std::string> Master(const char* value) override;
+        std::vector<std::string> masterForValue(const char* value, std::vector<int>& freeSlaves);
         int Slave() override;
         void runSlaveAlgorithm(mpz_t left, mpz_t right);
         void initSlaves(std::vector<int>& freeSlaves, size_t numberOfSlaves );
+        void setSlavesValueTag(size_t numberOfSlaves);
 
         enum Tags{ SETVALUE_TAG=10, SETVALUESIZE_TAG,FIRSTNUM_TAG, SECNUM_TAG, FIRSTRES_TAG, SECRES_TAG, FINNISHED_TAG };
 };

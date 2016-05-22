@@ -42,7 +42,7 @@ int main(int argc, char** argv)
                 logger.write(std::string("Running algorithm for " + valueStr));
                 auto result = RunAlgorithm(algorithm, valueStr.c_str(), logger);
 
-                logger.write("Algorithm finnished");
+                logger.write("Algorithm finished");
                 communicator->algorithmFinnished(result);
             }
         }while(communicatorCommand != CommunicatorCommand::Quit);

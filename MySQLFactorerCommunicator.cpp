@@ -78,23 +78,19 @@ void MySQLFactorerCommunicator::algorithmFinnished(const std::vector<std::string
             insert_con(driver->connect(address.c_str(), username.c_str(), password.c_str()));
         insert_con->setSchema(defaultSchema.c_str());
 
-        for( size_t i = 1; i < result.size(); i += 2 )
+        std::string resStr;
+        for(std::string str :result )
         {
-            std::unique_ptr<sql::PreparedStatement> insert_stmt(
-                insert_con->prepareStatement("INSERT INTO FactorerMain_element VALUES (0,?,?,?)"));
-
-            insert_stmt->setString(1, result[i-1].c_str());
-            insert_stmt->setString(2, result[i].c_str());
-            insert_stmt->setInt(3, currentTaskId);
-            insert_stmt-> execute();
-
-            std::cout << "Returned: " << result[i-1] << " * " << result[i] << "\n";
+            resStr.append(str.append("*"));
         }
-            std::string cmd = std::string("UPDATE FactorerMain_task SET state = 2 WHERE id = ");
-            cmd.append(std::to_string(currentTaskId));
-            cmd.append(";");
-            std::cout << cmd << std::endl;
-            executeUpdate(cmd.c_str());
+        std::cout << "Returned: " << resStr << "\n";
+        std::string cmd = std::string("UPDATE FactorerMain_task SET state = 2, result = \"");
+        cmd.append(resStr);
+        cmd.append("\" WHERE id = ");
+        cmd.append(std::to_string(currentTaskId));
+        cmd.append(";");
+        std::cout << cmd << std::endl;
+        executeUpdate(cmd.c_str());
     }
     catch (sql::SQLException &e)
          {

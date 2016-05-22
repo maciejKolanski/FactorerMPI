@@ -12,7 +12,7 @@ class CfracAlgorithm : public MPIAlgorithm
 
     private:
         //parametr do jakiej wartosci program zdecyduje sie wykonac BruteForce
-        int betterbruteforce=1000000000;
+        int betterbruteforce=1000;
         //ilosc iteracji wykonan algorytmu CFRAC dla jednej maszyny
         int n = 100000000;//dla wiekszej ilosci 'for' wywala bledy//alternatywnie mozna zrobic rekurencje
         int limit_k = 10; //ograniczenie resend'ow
