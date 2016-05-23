@@ -79,9 +79,12 @@ void MySQLFactorerCommunicator::algorithmFinnished(const std::vector<std::string
         insert_con->setSchema(defaultSchema.c_str());
 
         std::string resStr;
-        for(std::string str :result )
+        for(int i = 0; i < result.size(); ++i )
         {
-            resStr.append(str.append("*"));
+            std::string singleNum = result[i];
+            if(i < result.size()-1)
+                singleNum.append("*");
+            resStr.append(singleNum);
         }
         std::cout << "Returned: " << resStr << "\n";
         std::string cmd = std::string("UPDATE FactorerMain_task SET state = 2, result = \"");

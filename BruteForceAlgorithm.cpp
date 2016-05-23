@@ -34,12 +34,12 @@ vector<string> BruteForceAlgorithm::masterForValue(const char* value, std::vecto
     mpz_set_ui(current,2);
 
     setSlavesValueTag(slavesNumber);
-    if( mpz_cmp_ui(sqrt_value, slavesNumber*8) <= 0 )
+    if( mpz_cmp_ui(sqrt_value, slavesNumber) <= 0 )
     {
         int tmp = mpz_get_ui(sqrt_value)-1;
         slavesNumber = (tmp > 1) ? tmp : 2;
     }
-    mpz_cdiv_q_ui(step, sqrt_value, slavesNumber);
+    mpz_cdiv_q_ui(step, sqrt_value, slavesNumber*4);
 
     logger.write("Master brute force slaves initialized");
 ;
