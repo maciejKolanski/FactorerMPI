@@ -370,7 +370,10 @@ int CfracAlgorithm::AlgorithmCFRAC(mpz_t StartValue, int k, mpz_t result)
                 mpz_add(Q[i],Q[i],StartValue);//dla i=1
 
             //frac[i] = [G[i]/Q[i]]
-            mpz_fdiv_q(fractions[i],G[i],Q[i]);
+            if(mpz_cmp_ui(Q[i],0) != 0)
+                mpz_fdiv_q(fractions[i],G[i],Q[i]);
+            else
+                mpz_set_ui(Q[i],0);
             //fractions[i] = mpz_get_ui(temp_mpz);
 
 
