@@ -48,6 +48,8 @@
 		</Linker>
 		<Unit filename="BruteForceAlgorithm.cpp" />
 		<Unit filename="BruteForceAlgorithm.h" />
+		<Unit filename="CfracAlgorithm.cpp" />
+		<Unit filename="CfracAlgorithm.h" />
 		<Unit filename="CmdFactorerCommunicator.cpp" />
 		<Unit filename="CmdFactorerCommunicator.h" />
 		<Unit filename="FactorerCommunicatorInterface.h" />
