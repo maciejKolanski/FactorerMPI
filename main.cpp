@@ -2,6 +2,7 @@
 #include <string.h>
 #include <mpi.h>
 #include <memory>
+#include <fstream>
 
 #include "Logger.h"
 #include "MPIAlgorithmHelper.h"
@@ -12,8 +13,8 @@ using namespace std;
 vector<string> RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoEm, const char* valueStr, Logger &logger );
 bool Init(int *argc, char ***argv, int *myRank);
 FactorerCommunicatorInterface *InitCommunicator(int argc, char ** argv);
-int OpenFile(std:string);
-std::fstream file;
+int OpenFile(string);
+fstream file;
 
 int main(int argc, char** argv)
 {
@@ -30,9 +31,9 @@ int main(int argc, char** argv)
     if( myRank == 0 )
     {
         if(OpenFile(argv[2])<0)
-            logger.write(std:string("Cannot open file!"));
+            logger.write(string("Cannot open file!"));
         else
-            logger.write(std:string("Success opening file."));
+            logger.write(string("Success opening file."));
 
         try{
         unique_ptr<FactorerCommunicatorInterface> communicator(InitCommunicator(argc, argv));
@@ -124,9 +125,9 @@ FactorerCommunicatorInterface *InitCommunicator(int argc, char ** argv)
     return retInterface;
 }
 
-int OpenFile(std::string filename)
+int OpenFile(string filename)
 {
-        file.open(filename, std::ios::out, std::ios::app);
+        file.open(filename, ios::out | ios::app);
 
         if (file.good())
             return 0;
