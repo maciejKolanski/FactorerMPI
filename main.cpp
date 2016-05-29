@@ -13,8 +13,6 @@ using namespace std;
 vector<string> RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoEm, const char* valueStr, Logger &logger );
 bool Init(int *argc, char ***argv, int *myRank);
 FactorerCommunicatorInterface *InitCommunicator(int argc, char ** argv);
-int OpenFile(string);
-fstream file;
 
 int main(int argc, char** argv)
 {
@@ -30,8 +28,10 @@ int main(int argc, char** argv)
 
     if( myRank == 0 )
     {
-        if(OpenFile(argv[2])<0)
-            logger.write(string("Cannot open file!"));
+        fstream file;
+        file.open(argv[2], ios::out | ios::app);
+        if (!file.good())
+            logger.write(string("Cannot open file!"));;
         else
             logger.write(string("Success opening file."));
 
@@ -54,7 +54,8 @@ int main(int argc, char** argv)
                 t1=MPI_Wtime();
                 auto result = RunAlgorithm(algorithm, valueStr.c_str(), logger);
                 t2=MPI_Wtime();
-                file<<t2-t1;
+                double time = t2-t1;
+                file<<time;
                 logger.write("Algorithm finished");
                 communicator->algorithmFinnished(result);
             }
@@ -123,14 +124,4 @@ FactorerCommunicatorInterface *InitCommunicator(int argc, char ** argv)
     }
 
     return retInterface;
-}
-
-int OpenFile(string filename)
-{
-        file.open(filename, ios::out | ios::app);
-
-        if (file.good())
-            return 0;
-        else
-            return -1;
 }
