@@ -12,9 +12,12 @@ using namespace std;
 vector<string> RunAlgorithm(MPIAlgorithm::AlgorithmsEnum algoEm, const char* valueStr, Logger &logger );
 bool Init(int *argc, char ***argv, int *myRank);
 FactorerCommunicatorInterface *InitCommunicator(int argc, char ** argv);
+int OpenFile(std:string);
+std::fstream file;
 
 int main(int argc, char** argv)
 {
+
     Logger logger;
     int myRank;
     if( Init(&argc, &argv, &myRank) == false )
@@ -26,6 +29,11 @@ int main(int argc, char** argv)
 
     if( myRank == 0 )
     {
+        if(OpenFile(argv[2])<0)
+            logger.write(std:string("Cannot open file!"));
+        else
+            logger.write(std:string("Success opening file."));
+
         try{
         unique_ptr<FactorerCommunicatorInterface> communicator(InitCommunicator(argc, argv));
         CommunicatorCommand communicatorCommand;
@@ -40,8 +48,12 @@ int main(int argc, char** argv)
             if( communicatorCommand == CommunicatorCommand::Algorithm )
             {
                 logger.write(std::string("Running algorithm for " + valueStr));
-                auto result = RunAlgorithm(algorithm, valueStr.c_str(), logger);
 
+                double t1, t2;
+                t1=MPI_Wtime();
+                auto result = RunAlgorithm(algorithm, valueStr.c_str(), logger);
+                t2=MPI_Wtime();
+                file<<t2-t1;
                 logger.write("Algorithm finished");
                 communicator->algorithmFinnished(result);
             }
@@ -55,6 +67,8 @@ int main(int argc, char** argv)
         logger.write("Master main loop finnished");
 
         SendDieMessageToAll();
+
+        file.close();
     }
     else
     {
@@ -108,4 +122,14 @@ FactorerCommunicatorInterface *InitCommunicator(int argc, char ** argv)
     }
 
     return retInterface;
+}
+
+int OpenFile(std::string filename)
+{
+        file.open(filename, std::ios::out, std::ios::app);
+
+        if (file.good())
+            return 0;
+        else
+            return -1;
 }
