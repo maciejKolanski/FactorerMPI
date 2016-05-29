@@ -31,7 +31,7 @@ int main(int argc, char** argv)
         fstream file;
         file.open(argv[2], ios::out | ios::app);
         if (!file.good())
-            logger.write(string("Cannot open file!"));;
+            logger.write(string("Cannot open file!"));
         else
             logger.write(string("Success opening file."));
 
@@ -61,6 +61,7 @@ int main(int argc, char** argv)
             }
         }while(communicatorCommand != CommunicatorCommand::Quit);
 
+        file.close();
         }
         catch( FactorerCommunicatorException& fExc )
         {
@@ -69,8 +70,6 @@ int main(int argc, char** argv)
         logger.write("Master main loop finnished");
 
         SendDieMessageToAll();
-
-        file.close();
     }
     else
     {
