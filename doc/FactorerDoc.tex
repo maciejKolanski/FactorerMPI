@@ -8,6 +8,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 
+
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -160,8 +161,165 @@ Wybór padl na ten jezyk ze wzgledu na jego znajomosc przez czlonków grupy oraz
 
 \subsection{Strona internetowa}
 
-\section{Dokumentacja powykonawcza (instalacyjna)}
+Dostępna w sieci Internet strona WWW finalnie umożliwia rejestrację i logowanie użytkowników oraz zlecanie zadań, czyli liczb do faktoryzacji. Do tego użytkownik ma wgląd w historię zleconych przez niego zadań wraz z ich rozwiązaniami. Poza funkcjonalnościami dla zwykłego użytkownika strona umożliwia także działania administracyjne poprzez panel administracyjny. Do zadań tych należą takie rzeczy jak usuwanie zleconych zadań, nadawanie im priorytetu czy też zarządzanie użytkownikami. Strona współpracuje z bazą danych MySQL. Jest ona dostępna pod adresem \url{http://156.17.235.48/}.
 
+\newpage
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{mainpage.png}
+    \caption{Strona główna.}
+    \label{fig:mainpagescr}
+\end{figure}
+
+Stronę wykonano przy użyciu technologii Python Django\cite{django} i edytora tekstowego Sublime\cite{sublime} wraz z dodatkiem Anaconda Python IDE\cite{anacondaide}. Do komunikacji z bazą danych wykorzystano standardową bibliotekę do połączenia z MySQL dostępną w Django. Baza danych została stworzona przy pomocy ORM\cite{orminfo} także standardowego dla Django. Przykładowy kod dla encji Task poniżej.
+
+\begin{lstlisting}
+class Task(models.Model):
+    CANCELLED_STATUS = -1
+    UNDONE_STATUS = 0
+    WORKING_STATUS = 1
+    DONE_STATUS = 2
+    STATUS_CHOICES = (
+        (CANCELLED_STATUS, "Cancelled"),
+        (UNDONE_STATUS, "Undone"),
+        (WORKING_STATUS, "Working"),
+        (DONE_STATUS, "Done")
+    )
+
+    number_to_factor = models.CharField(max_length=200)
+    job_date = models.DateField(default=timezone.now)
+    state = models.IntegerField(choices=STATUS_CHOICES, default=UNDONE_STATUS)
+    priority = models.IntegerField(default=0)
+    result = models.CharField(max_length=200)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    algorithm = models.ForeignKey(Algorithm, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.number_to_factor)
+\end{lstlisting}
+
+Kolejne kolumny danej tabeli w bazie danych są tworzone poprzez definiowanie pól klas dziedziczących po models.Model\cite{djangomodels}, tak jak powyżej na przykład kolumna result jest polem tekstowym o długości maksymalnej 200 znaków. \\
+
+W celu utworzenia nowej podstrony definiuje się klasy dziedziczące po klasie View z Django. Poniżej znajduje się kod dla widoku podstrony z zadaniami użytkownika.
+
+\begin{lstlisting}
+class UserView(LoggedInMixin, View):
+    template_name = 'FactorerMain/userview.html'
+
+    def get(self, request, *args, **kwargs):
+        tasks = Task.objects.filter(user=request.user.id)[::-1]
+
+        context = {'tasks': tasks}
+
+        return render(request, self.template_name, context)
+\end{lstlisting}
+
+W tym przypadku UserView dziedziczy również po klasie LoggedInMixin odpowiadającej za autoryzację, dzięki czemu do takiej podstrony ma dostęp tylko użytkownik zalogowany. W zmiennej template\_name wskazano na szablon strony opisany w języku HTML. Następnie w metodzie get pobierane są wyniki z bazy danych przy pomocy metody Task.objects.filter(user=request.user.id)[::-1]. Zwróci to z encji Task wyniki należące do aktualnego użytkownika posortowane w od najnowszych do najstarszych. Na końcu zwracany jest szablon oraz kontekst, w tym przypadku zadania użytkownika, poprzez metodę render.\\
+
+Można tak pobrane dane z bazy użyć w HTML i wyświetlić je na stronie. Kod wygląda następująco:
+
+\begin{lstlisting}
+<h2>Moje zadania:</h2>
+{% if tasks %}
+    {% for task in tasks %}
+        <details>
+        <summary><p>Liczba <b>{{ task.number_to_factor }}</b> przy uzyciu {{ task.algorithm }} dnia {{ task.job_date }} jest w stanie {{ task.state }}</p></summary>
+        {% ifequal task.state 2 %}         
+            {{ task.result }}
+        </p>
+        {% endifequal %}
+        </details>
+    </br></br>  
+    {% endfor %}  
+{% else %}
+    <p>No tasks to show.</p>
+{% endif %}
+\end{lstlisting}
+
+Pierw sprawdzane jest czy w kontekście została przekazana zmienna tasks. Następnie przy pomocy pętli for przechodzi się przez kolejne elementy tabeli i drukuje jej elementy przy pomocy składni [tabela].[element]. Przykład uzyskanych z bazy danych wyników na stronie pokazano na rysunku poniżej.
+
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{userpage.png}
+    \caption{Podstrona z zadaniami użytkownika.}
+    \label{fig:userpagescr}
+\end{figure}
+
+W Django zazwyczaj definiuje się jeden bazowy szablon w postaci pliku HTML, a następnie na podstronach zastępuje się tylko wyróżnione bloki strony w sposób wyspecyfikowany dla danej podstrony. Uzyskuje się to przez rozszerzanie szablonów. Dla przykładu w główny pliku HTML znajduje się następujący fragment:
+
+\begin{lstlisting}
+ <div id="portfolio-samples">
+    <div class="wrap clearfix">
+        {% block gallery %}
+        {% endblock %}
+    </div><!-- // end .wrap -->
+</div><!-- // end #portfolio-samples -->
+\end{lstlisting}
+
+W tym kodzie zdefiniowano blok gallery, można go zastąpić przy pomocy poniższego fragmentu na innej stronie. 
+
+\begin{lstlisting}
+{% extends 'base.html' %}
+
+{% block gallery %}
+<div class="portfolio-item fl col-2">
+  <a href={% url 'bruteforce' %}><img src="static/images/al1.jpg" alt="thumb" /></a>
+      <div class="info">Brute force</div>
+  </div><!-- // end .portfolio-item -->
+  <div class="portfolio-item fl push-2 col-2">
+      <a href={% url 'cfrac' %}><img src="static/images/al2.jpg" alt="thumb" /></a>
+      <div class="info">CFRAC</div>
+  </div><!-- // end .portfolio-item -->
+{% endblock %}
+\end{lstlisting}
+
+Poza blokiem gallery reszta strony będzie taka jak zdefiniowano w pliku base.html. Strona projektu składa się z jednego bazowego szablonu i rozszerzających go kilku podstron.\\
+
+W celu połączenia wszystkiego należy zdefiniować jeszcze w pliku urls.py odwzorowania adresów url dla odpowiednich stron, dzięki czemu Django uruchamia odpowiednie klasy widoków dla zadanego adresu.
+
+\begin{lstlisting}
+urlpatterns = [
+    url(r'^$', views.IndexView.as_view(), name='index'),
+    url(r'^userview/?$', views.UserView.as_view(), name='userview'),
+    url(r'^about/?$', views.AboutView.as_view(), name='about'),
+    url(r'^creators/?$', views.CreatorsView.as_view(), name='creators'),
+    url(r'^bruteforce/?$', views.BruteforceView.as_view(), name='bruteforce'),
+    url(r'^cfrac/?$', views.CFRACView.as_view(), name='cfrac'),
+    url(r'^login/?$', 'django.contrib.auth.views.login'),
+    url(r'^logout/?$', 'django.contrib.auth.views.logout'),
+    url(r'^register/?$', views.register, name='register'),
+    url(r'^success_register/?$', views.SuccessRegisterView.as_view(),
+        name='success_register'),
+    url(r'^admin/?', include(admin.site.urls)),
+]
+\end{lstlisting}
+
+Przy tak zdefiniowanych adresach odnosi się do nich w HTML poprzez następującą linię kodu:
+\begin{lstlisting}
+<a href="{% url 'index' %}">Strona glowna</a>}
+\end{lstlisting}
+
+Do zadań administracyjnych został wykorzystany standardowy panel Django administration skonfigurowany dla potrzeb projektu.
+
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{adminpage.png}
+    \caption{Panel administracyjny Django.}
+    \label{fig:adminpagescr}
+\end{figure}
+
+Panel modyfikuje się poprzez edycję pliku admin.py.
+
+\begin{lstlisting}
+class TaskAdmin(admin.ModelAdmin):
+    list_display = ('number_to_factor', 'job_date', 'state', 'priority', 'result', 'user', 'algorithm')
+    search_fields = ['user__username']
+    list_filter = ('algorithm__name', 'user__username', 'state')
+
+admin.site.register(Task, TaskAdmin)
+\end{lstlisting}
+
+Klasa musi dziedziczyć po klasie admin.ModelAdmin, następnie można zdefiniować sposób wyświetlania danych, pola, po których ma być realizowane wyszukiwanie, czy też listę filtrów. Na końcu trzeba zarejestrować taką klasę dla danej encji.
+
+\section{Dokumentacja powykonawcza (instalacyjna)}
+ 
 \section{Istotne elementy kodu z komentarzem}
 
 \section{Przykładowe wyniki badań efektywności programu równeległego}
@@ -187,6 +345,22 @@ Wybór padl na ten jezyk ze wzgledu na jego znajomosc przez czlonków grupy oraz
 \bibitem{rsafactoringchallenge}
 	\emph{RSA Factoring Challenge}.
 	\url{http://pl.wikipedia.org/wiki/RSA_Factoring_Challenge}
+
+\bibitem{sublime}
+  \emph{Sublime Text Editor}.
+  \url{https://www.sublimetext.com/}
+
+\bibitem{anacondaide}.
+  \emph{Anaconda Python IDE}
+  \url{http://damnwidget.github.io/anaconda/}
+
+\bibitem{orminfo}
+  \emph{ORM - object-relational mapping}.
+  \url{https://pl.wikipedia.org/wiki/Mapowanie_obiektowo-relacyjne}
+
+\bibitem{djangomodels}
+  \emph{Django Models documentation}.
+  \url{https://docs.djangoproject.com/en/1.9/topics/db/models/}
 
 \end{thebibliography}
 
