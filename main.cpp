@@ -49,15 +49,17 @@ int main(int argc, char** argv)
             if( communicatorCommand == CommunicatorCommand::Algorithm )
             {
                 logger.write(std::string("Running algorithm for " + valueStr));
-
-                double t1, t2;
-                t1=MPI_Wtime();
-                auto result = RunAlgorithm(algorithm, valueStr.c_str(), logger);
-                t2=MPI_Wtime();
-                double time = t2-t1;
-                file<<time;
-                logger.write("Algorithm finished");
-                communicator->algorithmFinnished(result);
+                for(int i = 0; i < 20; ++i)
+                {
+                    double t1, t2;
+                    t1=MPI_Wtime();
+                    auto result = RunAlgorithm(algorithm, valueStr.c_str(), logger);
+                    t2=MPI_Wtime();
+                    double time = t2-t1;
+                    file<<time<<std::endl;
+                    logger.write("Algorithm finished");
+                    communicator->algorithmFinnished(result);
+                }
             }
         }while(communicatorCommand != CommunicatorCommand::Quit);
 
