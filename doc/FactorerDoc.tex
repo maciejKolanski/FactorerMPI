@@ -554,7 +554,50 @@ Jak widać na powyższym wyciągu z terminala serwer został uruchominy.
 
 \newpage
 \section{Przykładowe wyniki badań efektywności programu równeległego}
-\subsection{Algorytm CFRAC}
+
+Wydajność została przetestowana dla następujących parametrów:
+\begin{itemize}
+\item faktoryzowana liczba - 1234567891011121314
+\item ilość powtórzeń pomiarów - 20, wyniki uśredniono
+\item ilość rdzeni na węzeł - 2
+\item ilości węzłów obliczeniowych - 1, 2, 3, 4
+\end{itemize}
+\subsection{Testy wydajności dla algorytmu Bruteforce}
+Wyniki w formie wykresu dla algorytmu Bruteforce:
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{Bruteforce.png}
+    \caption{Bruteforce}
+    \label{fig:userpagescr}
+\end{figure}
+\newpage
+Algorytm faktoryzacji bruteforce posiada niekorzystną złożoność obliczeniową, przez co czas jego wykonania jest długi. Na wykresie widać, że dołączanie kolejnych maszyn powoduje skrócenie czasu obliczeń. Zależność czasu od ilości węzłów nie jest jednak liniowa. Wykorzystując narzędzia arkusza kalkulacyjnego można zasymulować prognozowaną linię trendu dla większej ilości maszyn. Widzimy zatem, że wzrost wydajności następuje tylko do pewnej ilości dołączanych węzłów obliczeniowych. Powyżej pewnej wartości zwiększanie ilości węzłów nie będzie powodowało przyspieszenia obliczeń.
+
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{Bruteforce_prognoza.png}
+    \caption{Bruteforce - prognozowane wyniki dla 14 maszyn}
+    \label{fig:userpagescr}
+\end{figure}
+\newpage
+\subsection{Testy wydajności dla algorytmu CFRAC}
+Wyniki w formie wykresu dla algorytmu CFRAC:
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{CFRAC.png}
+    \caption{CFRAC}
+    \label{fig:userpagescr}
+\end{figure}
+
+Algorytm CFRAC implementuje o wiele wydajniejszą metodę factoryzacji. Wyniki uzyskane na pojedynczym węźle obliczeniowym są około 9 razy mniejsze od wyników bruteforce dla tej samej liczby. Widać tutaj również ciekawe zjawisko. Przy dodawaniu kolejnych węzłów obliczeniowych czas wykonania zadania nie maleje, a wręcz nieznacznie wzrasta. Wydłużenie czasu jest wynikiem konieczności zużycia zasobów na rozdzielenie oraz rozesłanie podzadań do węzłów obliczeniowych, a następnie pobranie wyników cząstkowych i skompletowanie ostatecznego. Czas jest również uzależniony od prędkości przesyłu danych pomiędzy węzłami. W testach wykorzystywane było łącze FastEthernet o maksymalnej przepustowości 100 Mbit/s. Możliwe, że przy większej przepustowości dołączanie kolejnych węzłów nie powodowałoby takiego opóźnienia. W tym wypadku również można zasymulować prognozę dla większej ilości maszyn, jednakże należy ją traktować z większym dystansem niż tą dla bruteforce. Wyniki mają większe wahania, przez co trudniej było dobrać odpowiednią funkcję trendu.
+
+
+\begin{figure}[h!]
+    \includegraphics[width=\linewidth]{CFRAC_prognoza.png}
+    \caption{CFRAC - prognozowane wyniki dla 14 maszyn}
+    \label{fig:userpagescr}
+\end{figure}
+
+\clearpage
+\subsection{Algorytm CFRAC - badania dodatkowe}
+\paragraph{}Badania przeprowadzone zostały na pojedyńczym komputerze wykorzystując symulację MPI dla danej ilości wątków.
 \begin{figure}[h]
     \centering
     \includegraphics[width=1.0\textwidth]{cfracWydajnosc.png}
@@ -567,7 +610,6 @@ Jak widać na powyższym wyciągu z terminala serwer został uruchominy.
     \caption{Dane pomiarów wydajność algorytmu CFRAC}
     \label{fig:cfracTabela}
 \end{figure}
-\paragraph{}Badania przeprowadzone zostały na pojedyńczym komputerze wykorzystując symulację mpi dla danej ilości wątków.
 
 \section{Wnioski}
 
