@@ -9,7 +9,7 @@
 \usepackage{graphicx}
 \usepackage{listings}
 \usepackage{hyperref}
-
+\usepackage{amsmath}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -166,6 +166,9 @@ public:
 \end{itemize}
 
 \subsection{Klaster obliczeniowy - Algorytm Brute Force}
+\subsubsection{Opis algorytmu}
+\paragraph{}Zaimplementowany algorytm przeglądu zupełnego polega na wyznaczeniu maksymalnej wartości czynnika - czyli $\sqrt{n}$ i określenie zestawu przedziałów. Następnie każdy węzeł wykonawczy przedział $[x,y], x > 1, y <= \sqrt{n}$ i testuje, czy któraś liczba z tego przedziału dzieli się bez reszty przez $n$.
+
 
 \subsection{Klaster obliczeniowy - Algorytm CFRAC}
 \subsubsection{Opis algorytmu\cite{cfracwiki}\cite{cfracinz}}
@@ -180,14 +183,21 @@ i sprawdzamy(używając algorytmu naiwnego), czy $b^2 = a^2mod(n)$ jest liczbą 
 \subsubsection{Implementacja\cite{cfracimpl}}
 \paragraph{}Program generuję rekurencyjnie elementy tablicy, której elementy są ze sobą ściśle powiązane, następującymi wzorami:
 
-$Q[n] = Q[n-2] + q[n-1] * (r[n-1] - r[n-2]) G[n] = 2g - r[n-1] q[n] = G[n]/Q[n] r[n] = G[n] - q[n]Q[n] A[n] = q[n]*A[n-1] + A[n-2]modN$
+\begin{align*}
+Q[n] = Q[n-2] + q[n-1] * (r[n-1] - r[n-2])\\
+G[n] = 2g - r[n-1]\\
+q[n] = \frac{G[n]}{Q[n]}\\
+r[n] = G[n] - q[n]\\
+A[n] = q[n]*A[n-1] + A[n-2]modN
+\end{align*}
 
-gdzie
-
-$Q[-1]= N Q[0] = 1 q[0] = g r[-1] = g r[0] = 0 A[-1]= 1 A[0] = g g = sqrt(N)$
+gdzie:\begin{align*}
+Q[-1]= N\\Q[0] = 1\\ q[0] = g\\r[-1] = g\\r[0] = 0\\
+A[-1]= 1\\A[0] = g\\g = \sqrt{N}
+\end{align*}	
 \paragraph{}Dla powyższych reguł generowane są rekurencyjnie kolejne rekordy. Przy wygenerowaniu każdego kolejnego "zestawu" wyników badany był element Q[i]. Jeżeli był on możliwy do spierwiastkowania(reszta z pierwiastka kwadratowego jego wartości była równa zeru), to następnym krokiem w celu uzyskania szukanego faktora było obliczenie następującej wartości:
 
-$temp = A[i-1] - sqrt(Q[i])$
+$temp = A[i-1] - \sqrt{Q[i]}$
 
 \paragraph{}Ostatnim krokiem było obliczenie NWD (największego wspólnego dzielnika)pomiędzy uzyskaną wartością (temp), a liczbą dla której szukamy faktora(N). Wykorzystanym algorytmem do obliczania NWD był algorytm euklidesa, który jest aktualnie najefektywniejszym algorytmem wykorzystywanym do tej operacji.
 
