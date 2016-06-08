@@ -382,6 +382,140 @@ Klasa musi dziedziczyć po klasie admin.ModelAdmin, następnie można zdefiniowa
 
 \section{Dokumentacja powykonawcza (instalacyjna)}
 
+\subsection{Uruchomienie klastra}
+\subsubsection{Wymagania systemowe}
+
+System posiada następujące wymagania programowe:
+\begin{itemize}
+\item system operacyjny Ubuntu 14.04 LTS
+\item zainstalowana biblioteka MPICH2 w wersji 3.0.4
+\item klient SSH, np. openssh (1:6.6p1-2ubuntu2.7)
+\item serwer systemu wymiany plików NFS, np. nfs-kernel-server (1:1.2.8-6ubuntu1.2) - na głównej maszynie klastra (master)
+\item klient systemu wymiany plików NFS, np. nfs-common (1:1.2.8-6ubuntu1.2) - na pozostałych maszynach klastra (slaves)
+\end{itemize}
+ 
+Minimalne wymagania sprzętowe nie zostały sprecyzowane, system powinien się uruchomić na dowolnej konfiguracji z zainstalowanym powyższym oprogramowaniem. Niezbędne jest, aby wszystkie maszyny tworzące klaster były umieszczone w jednej sieci LAN pracującej w technologii FastEthernet lub wyższej. Dodatkowo węzeł główny musi posiadać połączenie z Internetem w celu komunikacji z bazą danych.
+
+\subsubsection{Konfiguracja systemu}
+Aby uruchomić system na docelowej grupie maszyn należy wykonać następujące kroki:
+\begin{itemize}
+\item zmapować adresy ip maszyn w pliku systemowym \textit{/etc/hosts}
+\item utworzyć na każdej maszynie nowego użytkownika \textit{mpiuser}
+\item utworzyć folder współdzielony w sieci za pomocą systemu NFS
+\item zapewnić bezhasłowe połączenie SSH pomiędzy węzłem głównym, a każdym węzłem obliczeniowym
+\item skopiować plik wykonywalny programu do folderu współdzielonego
+\item uruchomić plik za pomocą komendy \textit{mpirun}
+\end{itemize}
+\newpage
+\paragraph{Edycja pliku \textit{hosts}}
+
+Plik znajduje się w katalogu /etc. Należy edytować go w dowolnym edytorze tekstu i przypisać lokalne adresy ip do nazw hostów. Przykładowy plik:
+\begin{lstlisting}
+127.0.0.1	localhost
+#127.0.1.1	linux0
+
+156.17.41.15	master
+156.17.41.60	slave1
+156.17.41.61	slave2
+156.17.41.62	slave3
+
+# The following lines are desirable for IPv6 capable hosts
+::1     ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+\end{lstlisting}
+
+\paragraph{Tworzenie nowego użytkownika}
+
+Aby utworzyć nowego użytkownika należy wykonać następującą komendę z uprawnieniami administratora:
+\begin{lstlisting}
+$ sudo adduser mpiuser
+\end{lstlisting}
+
+Krok należy powtórzyć na każdym węźle.
+
+\paragraph{Utworzenie folderu współdzielonego i udostępnienie go w sieci}
+Po zalogowaniu na konto \textit{mpiuser} należy dokonać następujących kroków:
+
+Na głównym węźle:
+
+Utworzenie folderu cloud:
+\begin{lstlisting}
+$ mkdir cloud
+\end{lstlisting}
+
+Edycja pliku /etc/exports i umieszczenie w nim wpisu:
+\begin{lstlisting}
+/home/mpiuser/cloud *(rw,sync,no_root_squash,no_subtree_check)
+\end{lstlisting}
+
+Wyeksportowanie zmian:
+
+\begin{lstlisting}
+$ exportfs -a
+\end{lstlisting}
+\newpage
+Na węzłach obliczeniowych:
+
+Utworzenie folderu cloud:
+\begin{lstlisting}
+$ mkdir cloud
+\end{lstlisting}
+
+Zamontowanie folderu współdzielonego do lokalnego systemu plików:
+\begin{lstlisting}
+$ sudo mount -t nfs master:/home/mpiuser/cloud ~/cloud
+\end{lstlisting}
+
+Sprawdzenie, czy folder został poprawnie zamontowany:
+\begin{lstlisting}
+$ df -h
+Filesystem                  Size  Used Avail Use% Mounted on
+master:/home/mpiuser/cloud  49G   15G   32G  32% /home/mpiuser/cloud
+\end{lstlisting}
+
+\paragraph{Tworzenie bezhasłowego połączenia SSH}
+Poniższe kroki należy wykonać na każdym węźle.
+
+Generacja pary kluczy - publicznego i prywatnego:
+\begin{lstlisting}
+$ ssh-keygen -t dsa
+\end{lstlisting}
+
+Przesłanie klucza publicznego z węzła głównego na obliczeniowe i na odwrót:
+\begin{lstlisting}
+$ ssh-copy-id master (na wezlach obliczeniowych)
+$ ssh-copy-id slave[i] (na wezle glownym)
+$ ssh-copy-id localhost (dodatkowo na kazdej maszynie)
+\end{lstlisting}
+
+Wyłączenie konieczności podawania hasła przy logowaniu SSH:
+\begin{lstlisting}
+$ eval `ssh-agent`
+$ ssh-add ~/.ssh/id_dsa
+\end{lstlisting}
+
+Należy przetestować połączenie pomiędzy węzłem głównym i każdym z obliczeniowych za pomocą próby zalogowania:
+\begin{lstlisting}
+$ ssh master (slave[i])
+\end{lstlisting}
+
+\paragraph{Uruchomienie pliku wykonywalnego}
+Uruchomienie pliku wykonywalnego Factorer dokonuje się za pomocą komendy mpirun z określonymi parametrami. Przykładowe wywołanie:
+\begin{lstlisting}
+$ mpirun -np 4 -hosts master,slave1 ./Factorer
+\end{lstlisting}
+
+Komenda przyjmuje następujące parametry:
+\begin{itemize}
+\item -np \textit{liczba} - zbiorcza liczba wątków wykonywanych na klastrze. Przykład:
+System składa się z 3 jednakowych maszyn obliczeniowych i węzła głównego. Każda stacja posiada 2 rdzenie procesora. W celu równomiernego zrównoważenia obciążenia procesór wartość parametru powinna wynosić 3*2 + 2 = 8 wątków.
+
+\item -hosts \textit{hostname1},\textit{hostname2} ... - nazwy węzłów na których ma zostać uruchomiony program oddzielone przecinkami (bez spacji). Lista musi zawierać węzeł główny (master) oraz może zawierać dowolną liczbę węzłów obliczeniowych (slave).
+\end{itemize}
+
 \subsection{Uruchamianie strony}
 
 W celu uruchomienia strony potrzebny jest serwer wraz z zainstalowaną powłoką Python 3.4. Do tego należy zainstalować moduł Django w wersji 1.8.7. Oprócz powyższych należy też mieć serwer bazy danych, w przypadku tego projektu jest to serwer MySQL. Po spełnieniu tych wymagań można przejść do uruchamiania strony.\\
