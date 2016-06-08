@@ -127,7 +127,7 @@ Wybór padl na ten jezyk ze wzgledu na jego znajomosc przez czlonków grupy oraz
 \item Hosting plików - GitHub (\url{https://github.com/}) 
 \end{itemize}
 
-\section{Aktualny stan rynku}
+\section{Aktualny stan rynku\cite{cfracinz}}
 
 \paragraph{GGNFS (GPL'd implementation of General Number Field Sieve)} Aktywny rozwój. faktoryzacja liczb do 180 znaków, srednio do 140. Kilka wiekszych liczb tez. W wiekszosci przypadkow program GGNFS jest stabilny dla liczb skladajacych sie do 150-160 znakow. Posiada bugi. Nie jest czarna skrzynka, trzeba miec odpowiednia wiedze zeby go uzywać.
 
@@ -135,21 +135,7 @@ Wybór padl na ten jezyk ze wzgledu na jego znajomosc przez czlonków grupy oraz
 
 \paragraph{RSA Factoring Challenge} Zawody zorganizowane przez RSA Security. Otwarte zawody dla wszystkich mające na celu zwiększyć zainteresowanie faktoryzacją liczb. Opublikowana została lista pseudopierwszych liczb (rozkładających się na dokładnie dwa czynniki), nazwanych liczbami RSA.Za rozłożenie niektórych z nich wyznaczono pieniężną nagrodę. Najmniejsza z nich, 100-cyfrowa liczba RSA-100 została rozłożona w ciągu kilku dni, ale większość do dziś pozostaje niezłamana.Zawody miały na celu śledzenie rozwoju możliwości komputerów w faktoryzacji. Jest to niezwykle istotne przy wyborze długości klucza w szyfrowaniu asymetrycznym metodą RSA. Postęp w łamaniu kolejnych liczb powinien zdradzać jakie długości klucza można jeszcze uznawać za bezpieczne.\cite{rsafactoringchallenge}
 
-%Poczatkowo rekordy były bite za pomoca algorytmu CFRAC, który ustapił dopiero w latach 8XX w. algorytmowi sita kwadratowego. Za pomoca algorytmu QS sfaktoryzowano, miedzy innymi,liczby RSA-100, RSA-110, RSA-120 i RSA-129 [5]. Nast˛epnie na scen˛e wkroczył algorytm sita ciałliczbowego, który do dzis pozostaje najszybszym ze znanych algorytmów faktoryzacji i dzier ´ zy rekordy - najpierw RSA-640 (640 bitów, 193 cyfry) i RSA-200 (200 cyfr) w 2005 roku, a nast˛epnie RSA-768(232 cyfry) w 2009 roku, co pozostaje niepobitym rekordem do dzis.
-
-%praca mgr Mateusz Niezabitkowski http://ki.agh.edu.pl/sites/default/files/usefiles/172/theses/mateusz.niezabitowski.algorytmy.faktoryzacji.w.zastosowaniach.kryptograficznych.v1.0-final.pdf
-
-%Implementacje (eng wiki) : Some implementations focus on a certain smaller class of numbers. These are known as special number field sieve techniques, such as used in the Cunningham project. A project called NFSNET ran from 2002[6] through at least 2007. It used volunteer distributed computing on the Internet.[7] Paul Leyland of the United Kingdom and Richard Wackerbarth of Texas were involved.[8]
-
-%Until 2007, the gold-standard implementation was a suite of software developed and distributed by CWI in the Netherlands, which was available only under a relatively restrictive license. In 2007, Jason Papadopoulos developed a faster implementation of final processing as part of msieve, which is in the public domain. Both implementations feature the ability to be distributed among several nodes in a cluster with a sufficiently fast interconnect.
-
-%Polynomial selection is normally performed by GPL software written by Kleinjung, or by msieve, and lattice sieving by GPL software written by Franke and Kleinjung; these are distributed in GGNFS.
-
-%NFS@Home GGNFS pGNFS factor by gnfs CADO-NFS msieve, which contains excellent final-processing code, a good implementation of the polynomial selection which is very good for smaller numbers, and an implementation of the line sieve. kmGNFS
-
-%ElvenSmooth - projekt (... jeszcze nie doczytalem o nim dokladnie) http://home.earthlink.net/~elevensmooth/
-
-%Factorizations of Cyclotomic Numbers http://www.asahi-net.or.jp/~KC2H-MSM/cn/
+\paragraph{}Poczatkowo rekordy były bite za pomoca algorytmu CFRAC, który ustapił dopiero w latach 8X algorytmowi sita kwadratowego. Za pomoca algorytmu QS sfaktoryzowano, miedzy innymi, liczby $RSA-100, RSA-110, RSA-120 i RSA-129$. Następnie na scene wkroczył algorytm sita ciałliczbowego, który do dzis pozostaje najszybszym ze znanych algorytmów faktoryzacji i dzierży rekordy - najpierw RSA-640 (640 bitów, 193 cyfry) i RSA-200 (200 cyfr) w 2005 roku, a następnie RSA-768(232 cyfry) w 2009 roku, co pozostaje niepobitym rekordem do dzis.
 
 \section{Projekt techniczny}
 
@@ -454,6 +440,7 @@ Jak widać na powyższym wyciągu z terminala serwer został uruchominy.
 
 \bibitem{cfracinz}
 	\emph{CFRAC zastosowanie}.
+	\author{Mateusz Niezabitowski}
     \url{http://ki.agh.edu.pl/sites/default/files/usefiles/172/theses/mateusz.niezabitowski.algorytmy.faktoryzacji.w.zastosowaniach.kryptograficznych.v1.0-final.pdf}
     
 \bibitem{cfracimpl}
