@@ -2,7 +2,6 @@
 #include <string.h>
 #include <mpi.h>
 #include <memory>
-#include <fstream>
 
 #include "Logger.h"
 #include "MPIAlgorithmHelper.h"
@@ -28,13 +27,6 @@ int main(int argc, char** argv)
 
     if( myRank == 0 )
     {
-        fstream file;
-        file.open(argv[2], ios::out | ios::app);
-        if (!file.good())
-            logger.write(string("Cannot open file!"));
-        else
-            logger.write(string("Success opening file."));
-
         try{
         unique_ptr<FactorerCommunicatorInterface> communicator(InitCommunicator(argc, argv));
         CommunicatorCommand communicatorCommand;
@@ -49,21 +41,12 @@ int main(int argc, char** argv)
             if( communicatorCommand == CommunicatorCommand::Algorithm )
             {
                 logger.write(std::string("Running algorithm for " + valueStr));
-                for(int i = 0; i < 20; ++i)
-                {
-                    double t1, t2;
-                    t1=MPI_Wtime();
-                    auto result = RunAlgorithm(algorithm, valueStr.c_str(), logger);
-                    t2=MPI_Wtime();
-                    double time = t2-t1;
-                    file<<time<<std::endl;
-                    logger.write("Algorithm finished");
-                    communicator->algorithmFinnished(result);
-                }
+                auto result = RunAlgorithm(algorithm, valueStr.c_str(), logger);
+                logger.write("Algorithm finished");
+                communicator->algorithmFinnished(result);
             }
         }while(communicatorCommand != CommunicatorCommand::Quit);
 
-        file.close();
         }
         catch( FactorerCommunicatorException& fExc )
         {
