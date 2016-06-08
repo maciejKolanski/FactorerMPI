@@ -167,7 +167,35 @@ public:
 
 \subsection{Klaster obliczeniowy - Algorytm Brute Force}
 \subsubsection{Opis algorytmu}
-\paragraph{}Zaimplementowany algorytm przeglądu zupełnego polega na wyznaczeniu maksymalnej wartości czynnika - czyli $\sqrt{n}$ i określenie zestawu przedziałów. Następnie każdy węzeł wykonawczy przedział $[x,y], x > 1, y <= \sqrt{n}$ i testuje, czy któraś liczba z tego przedziału dzieli się bez reszty przez $n$. Jeśli tak, algorytm znalazł dwa czynniki określające szukaną liczbę, następuję przerwanie i rekurencyjne wywołanie algorytmu dla znalezionych elementów.
+\paragraph{}Zaimplementowany algorytm przeglądu zupełnego polega na wyznaczeniu maksymalnej wartości czynnika - czyli $\sqrt{n}$ i określenie zestawu przedziałów. Następnie każdy węzeł wykonawczy otrzymuje przedział $[x,y], x > 1, y <= \sqrt{n}$ i testuje, czy któraś liczba z tego przedziału dzieli się bez reszty przez $n$. Jeśli tak, algorytm znalazł dwa czynniki określające szukaną liczbę, następuję przerwanie i rekurencyjne wywołanie algorytmu dla znalezionych elementów. Do obliczeń i reprezentacji dużych liczb (większych niż 128 bitów) wykorzystano bibliotekę GMP\cite{gmplib}.
+
+\subsection{Implementacja algorytmu}
+\paragraph{}Właściwy kod wykonujący obliczenia korzysta z szeregu funkcji bibliotecznych GMP. Każda liczba z przedziału jest testosowana, jeśli dzieli zadaną (główną) liczbę bez reszty, algorytm jest kończony, a wynik przesyłany do węzła Master poprzez komunikat MPI.
+\begin{lstlisting}[caption=Algorytm Slave'a szukający liczb dzielącej w zadanym przedziale]
+void BruteForceAlgorithm::runSlaveAlgorithm(mpz_t left, mpz_t right)
+{
+    mpz_t mod, q;
+    mpz_init(mod);
+    mpz_init(q);
+    char *buff = new char[getMaxDigits()];
+
+    while( mpz_cmp(left,right) <= 0 )
+    {
+        mpz_cdiv_qr(q,mod,_value,left);
+        if(  mpz_cmp_ui(mod,0) == 0 )
+        {
+            getString(left,buff);
+            MPI_Send(buff,getMaxDigits(),MPI_CHAR,0,FIRSTRES_TAG,MPI_COMM_WORLD);
+
+            getString(q,buff);
+            MPI_Send(buff,getMaxDigits(),MPI_CHAR,0,SECRES_TAG,MPI_COMM_WORLD);
+            break;
+        }
+        mpz_add_ui(left,left,1);
+    }
+    delete buff;
+}
+\end{lstlisting}
 
 
 \subsection{Klaster obliczeniowy - Algorytm CFRAC}
@@ -672,6 +700,10 @@ Algorytm CFRAC implementuje o wiele wydajniejszą metodę factoryzacji. Wyniki u
 \bibitem{djangomodels}
   \emph{Django Models documentation}.
   \url{https://docs.djangoproject.com/en/1.9/topics/db/models/}
+
+\bibitem{gmplib}
+  \emph{GMP Library}.
+  \url{https://gmplib.org/}
 
 \end{thebibliography}
 
