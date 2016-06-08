@@ -1,0 +1,22 @@
+\BOOKMARK [1][-]{section.1}{Temat projektu}{}% 1
+\BOOKMARK [1][-]{section.2}{Zakres projektu}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Cel}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Funkcjonalnosc}{section.2}% 4
+\BOOKMARK [1][-]{section.3}{Narzedzia i technologie zastosowane w projekcie}{}% 5
+\BOOKMARK [2][-]{subsection.3.1}{Zastosowane technologie}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.2}{Narzedzia wykorzystane w projekcie}{section.3}% 7
+\BOOKMARK [1][-]{section.4}{Aktualny stan rynku}{}% 8
+\BOOKMARK [1][-]{section.5}{Projekt techniczny}{}% 9
+\BOOKMARK [2][-]{subsection.5.1}{Klaster obliczeniowy - Komunikacja}{section.5}% 10
+\BOOKMARK [2][-]{subsection.5.2}{Klaster obliczeniowy - Algorytm Brute Force}{section.5}% 11
+\BOOKMARK [2][-]{subsection.5.3}{Klaster obliczeniowy - Algorytm CFRAC}{section.5}% 12
+\BOOKMARK [3][-]{subsubsection.5.3.1}{Opis algorytmucfracwikicfracinz}{subsection.5.3}% 13
+\BOOKMARK [3][-]{subsubsection.5.3.2}{Implementacjacfracimpl}{subsection.5.3}% 14
+\BOOKMARK [3][-]{subsubsection.5.3.3}{Podzia\233 zadan \(Master Slave\)}{subsection.5.3}% 15
+\BOOKMARK [2][-]{subsection.5.4}{Strona internetowa}{section.5}% 16
+\BOOKMARK [1][-]{section.6}{Dokumentacja powykonawcza \(instalacyjna\)}{}% 17
+\BOOKMARK [2][-]{subsection.6.1}{Uruchamianie strony}{section.6}% 18
+\BOOKMARK [1][-]{section.7}{Istotne elementy kodu z komentarzem}{}% 19
+\BOOKMARK [1][-]{section.8}{Przyk\233adowe wyniki badan efektywnosci programu r\363wneleg\233ego}{}% 20
+\BOOKMARK [2][-]{subsection.8.1}{Algorytm CFRAC}{section.8}% 21
+\BOOKMARK [1][-]{section.9}{Wnioski}{}% 22
