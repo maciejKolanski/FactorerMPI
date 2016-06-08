@@ -244,7 +244,7 @@ Dostępna w sieci Internet strona WWW finalnie umożliwia rejestrację i logowan
 
 Stronę wykonano przy użyciu technologii Python Django\cite{django} i edytora tekstowego Sublime\cite{sublime} wraz z dodatkiem Anaconda Python IDE\cite{anacondaide}. Do komunikacji z bazą danych wykorzystano standardową bibliotekę do połączenia z MySQL dostępną w Django. Baza danych została stworzona przy pomocy ORM\cite{orminfo} także standardowego dla Django. Przykładowy kod dla encji Task poniżej.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption=Przykładowa implementacja encji w kodzie Python,numbers=left]
 class Task(models.Model):
     CANCELLED_STATUS = -1
     UNDONE_STATUS = 0
@@ -273,7 +273,7 @@ Kolejne kolumny danej tabeli w bazie danych są tworzone poprzez definiowanie p�
 
 W celu utworzenia nowej podstrony definiuje się klasy dziedziczące po klasie View z Django. Poniżej znajduje się kod dla widoku podstrony z zadaniami użytkownika.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption=Klasa widoku obsługująca podstronę,numbers=left]
 class UserView(LoggedInMixin, View):
     template_name = 'FactorerMain/userview.html'
 
@@ -289,7 +289,7 @@ W tym przypadku UserView dziedziczy również po klasie LoggedInMixin odpowiadaj
 
 Można tak pobrane dane z bazy użyć w HTML i wyświetlić je na stronie. Kod wygląda następująco:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption=Szablon HTML używający odczytane dane z bazy,numbers=left]
 <h2>Moje zadania:</h2>
 {% if tasks %}
     {% for task in tasks %}
@@ -317,7 +317,7 @@ Pierw sprawdzane jest czy w kontekście została przekazana zmienna tasks. Nast�
 
 W Django zazwyczaj definiuje się jeden bazowy szablon w postaci pliku HTML, a następnie na podstronach zastępuje się tylko wyróżnione bloki strony w sposób wyspecyfikowany dla danej podstrony. Uzyskuje się to przez rozszerzanie szablonów. Dla przykładu w główny pliku HTML znajduje się następujący fragment:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption=Fragment głównego szablonu strony,numbers=left]
  <div id="portfolio-samples">
     <div class="wrap clearfix">
         {% block gallery %}
@@ -328,7 +328,7 @@ W Django zazwyczaj definiuje się jeden bazowy szablon w postaci pliku HTML, a n
 
 W tym kodzie zdefiniowano blok gallery, można go zastąpić przy pomocy poniższego fragmentu na innej stronie. 
 
-\begin{lstlisting}
+\begin{lstlisting}[caption=Fragment podstrony rozszerzającej bazowy szablon,numbers=left]
 {% extends 'base.html' %}
 
 {% block gallery %}
@@ -347,7 +347,7 @@ Poza blokiem gallery reszta strony będzie taka jak zdefiniowano w pliku base.ht
 
 W celu połączenia wszystkiego należy zdefiniować jeszcze w pliku urls.py odwzorowania adresów url dla odpowiednich stron, dzięki czemu Django uruchamia odpowiednie klasy widoków dla zadanego adresu.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption=Definicja adresów URL,numbers=left]
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^userview/?$', views.UserView.as_view(), name='userview'),
@@ -379,7 +379,7 @@ Do zadań administracyjnych został wykorzystany standardowy panel Django admini
 
 Panel modyfikuje się poprzez edycję pliku admin.py.
 
-\begin{lstlisting}
+\begin{lstlisting}[caption=Klasa konfigurująca panel administratora,numbers=left]
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('number_to_factor', 'job_date', 'state', 'priority', 'result', 'user', 'algorithm')
     search_fields = ['user__username']
