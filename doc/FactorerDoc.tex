@@ -178,7 +178,7 @@ public:
 $sqrt[n] < a < n$ (gdzie n to liczba, którą chcemy sfaktoryzować)
 i sprawdzamy(używając algorytmu naiwnego), czy $b^2 = a^2mod(n)$ jest liczbą B-gładką, dla ustalonego B. Jeżeli tak to dodajemy znalezioną parę do zbioru (liczba B-gładka to taka liczba, której wszystkie dzielniki pierwsze są mniejsze bądź równe dla ustalonego B).
 
-\paragraph{}W algorytmie CFRAC idea pozostaje bez zmian, definiowany jest natomiast sposób wybierania par. Zamiast losowania ich wykorzystywany jest ciąg rozwinięcia sqrt(n) w ułamek łańcuchowy. Złożoność obliczeniowa algorytmu CFRAC jest rzędu $O(e^sqrt(2* logn * loglog n))$ <- na wikipedi lepiej przedstawiony wzor
+\paragraph{}W algorytmie CFRAC idea pozostaje bez zmian, definiowany jest natomiast sposób wybierania par. Zamiast losowania ich wykorzystywany jest ciąg rozwinięcia sqrt(n) w ułamek łańcuchowy. Złożoność obliczeniowa algorytmu CFRAC jest rzędu $O(e^{\sqrt{2*\log{n}* \log{\log{n}}}})$.
 
 \subsubsection{Implementacja\cite{cfracimpl}}
 \paragraph{}Program generuję rekurencyjnie elementy tablicy, której elementy są ze sobą ściśle powiązane, następującymi wzorami:
