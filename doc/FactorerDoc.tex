@@ -1,11 +1,13 @@
 \documentclass{article}
 
+\usepackage[utf8]{inputenc}
 \usepackage{polski}
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{caption}
 \usepackage{color}
 \usepackage{graphicx}
+\usepackage{listings}
 \usepackage{hyperref}
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
@@ -150,13 +152,64 @@ Wybór padl na ten jezyk ze wzgledu na jego znajomosc przez czlonków grupy oraz
 
 \section{Projekt techniczny}
 
-\subsection{Klaster obliczeniowy}
+\subsection{Klaster obliczeniowy - Komunikacja}
 
-\paragraph{Komunikacja}
 
-\paragraph{Algorytm Brute Force}
+\subsection{Klaster obliczeniowy - Algorytm Brute Force}
 
-\paragraph{Algorytm CFRAC}
+\subsection{Klaster obliczeniowy - Algorytm CFRAC}
+\subsubsection{Opis algorytmu\cite{cfracwiki}\cite{cfracinz}}
+\paragraph{}Metoda CFRAC  jest algorytmem faktoryzacji liczb całkowitych. Jest to uniwersalny algorytm będący w stanie rozłożyć na czynniki każdą liczbę, nie polegając na żadnych ograniczeniach czy warunkach. Został on opisany przez D.H. Lehmer'a oraz R. E. Powers'a w 1931 roku, oraz wdrożony na komputery pierwszy raz przez Michael'a A. Morisson'a oraz John'a Brillhart'a w 1975 roku.
+
+\paragraph{}Algorytm ten bazuje na metodzie faktoryzacji Diaxona. Metoda Diaxona polegała na losowaniu kolejnych liczb 'a' takie, że:
+$sqrt[n] < a < n$ (gdzie n to liczba, którą chcemy sfaktoryzować)
+i sprawdzamy(używając algorytmu naiwnego), czy $b^2 = a^2mod(n)$ jest liczbą B-gładką, dla ustalonego B. Jeżeli tak to dodajemy znalezioną parę do zbioru (liczba B-gładka to taka liczba, której wszystkie dzielniki pierwsze są mniejsze bądź równe dla ustalonego B).
+
+\paragraph{}W algorytmie CFRAC idea pozostaje bez zmian, definiowany jest natomiast sposób wybierania par. Zamiast losowania ich wykorzystywany jest ciąg rozwinięcia sqrt(n) w ułamek łańcuchowy. Złożoność obliczeniowa algorytmu CFRAC jest rzędu $O(e^sqrt(2* logn * loglog n))$ <- na wikipedi lepiej przedstawiony wzor
+
+\subsubsection{Implementacja\cite{cfracimpl}}
+\paragraph{}Program generuję rekurencyjnie elementy tablicy, której elementy są ze sobą ściśle powiązane, następującymi wzorami:
+
+$Q[n] = Q[n-2] + q[n-1] * (r[n-1] - r[n-2]) G[n] = 2g - r[n-1] q[n] = G[n]/Q[n] r[n] = G[n] - q[n]Q[n] A[n] = q[n]*A[n-1] + A[n-2]modN$
+
+gdzie
+
+$Q[-1]= N Q[0] = 1 q[0] = g r[-1] = g r[0] = 0 A[-1]= 1 A[0] = g g = sqrt(N)$
+\paragraph{}Dla powyższych reguł generowane są rekurencyjnie kolejne rekordy. Przy wygenerowaniu każdego kolejnego "zestawu" wyników badany był element Q[i]. Jeżeli był on możliwy do spierwiastkowania(reszta z pierwiastka kwadratowego jego wartości była równa zeru), to następnym krokiem w celu uzyskania szukanego faktora było obliczenie następującej wartości:
+
+$temp = A[i-1] - sqrt(Q[i])$
+
+\paragraph{}Ostatnim krokiem było obliczenie NWD (największego wspólnego dzielnika)pomiędzy uzyskaną wartością (temp), a liczbą dla której szukamy faktora(N). Wykorzystanym algorytmem do obliczania NWD był algorytm euklidesa, który jest aktualnie najefektywniejszym algorytmem wykorzystywanym do tej operacji.
+
+\subsubsection{Podział zadań (Master Slave)}
+
+\paragraph{}Z powodu rekurencyjnego generowania wyników, efektywny podział pracy pomiędzy różne maszyny(slave'y) był bardzo ciężki do zrealizowania. Ostatecznie udało nam się wymyślić sposób podziału prac, który może nie jest najlepszy ale zapewnia w pewnym stopniu poprawe wydajności przy wykorzystaniu wielu maszyn.
+
+\paragraph{}Polega on na wprowadzeniu do algorytmu parametru K. Dla każdej maszyny oprócz danej liczby do faktoryzacji wysyłamy również indywidualny dla niej parametr, przez który mnoży on otrzymaną liczbę do faktoryzacji. Dla nowej uzyskanej liczby k*N, algorytm znajduję wyniki w innym czasie. Wadą tego rozwiązania jest nie zawsze poprawny wynik, dlatego po jego odebraniu trzeba sprawdzić jego poprawność (np odrzucić wyniki, które dzielą się przez k)
+
+\paragraph{}Należy też wspomnieć, że CFRAC jest efektywnym algorytmem tylko dla dużych liczb, dlatego w celu znacznego skrócenia czasu operacji mniejsze liczby faktoryzowane są prostym algorytmem naiwnym przez maszyne Master.
+
+\paragraph{}Algorytm podziału zadań przez maszyna Master wygląda w następujący sposób:
+
+\begin{lstlisting}[caption=Sekwencja instrukcji algorytmu CFRAC,numbers=left]
+    Utworz kolejke na wynik
+    Wrzuc pierwsza liczbe (N) do kolejki liczb do faktoryzacji
+    Dopoki kolejka nie jest pusta 
+        Dopoki nie znalazles ostatniej liczby pierwszej
+            Wyciagnij liczbe A z kolejki 
+            Jezeli A jest liczba duza //(efektywny CFRAC) 
+                Zainicjuj maszyny (Slaves) 
+                Rozeslij zadania wraz z indywidualnym parametrem K 
+                Wyrzuc aktualna liczbe A z kolejki 
+                Wykonuj dopoki nie odbierzesz wynikow od wszystkich maszyn 
+                    Czekaj na wynik 
+                    Sprawdz jego poprawnosc 
+                    Jezeli wynik jest poprawny: 
+                        Jezeli jest liczba pierwsza, wrzuc do kolejki wynikow
+                        Jezeli nie jest liczba pierwsza wrzuc go oraz jego iloraz z liczba A do kolejki liczb do faktoryzacji 
+                    Jezeli zadna maszyna nie zwrocila poprawnego wyniku, zmien parametr k i wrzuc z powrotem liczbe A do kolejki liczb do faktoryzacji 
+            Dla malej liczby uzyj algorytmu naiwnego (bruteforce)
+\end{lstlisting}
 
 \subsection{Strona internetowa}
 
@@ -164,7 +217,22 @@ Wybór padl na ten jezyk ze wzgledu na jego znajomosc przez czlonków grupy oraz
 
 \section{Istotne elementy kodu z komentarzem}
 
+\newpage
 \section{Przykładowe wyniki badań efektywności programu równeległego}
+\subsection{Algorytm CFRAC}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{cfracWydajnosc.png}
+    \caption{Wydajność algorytmu CFRAC dla poszczególnej liczby wątków}
+    \label{fig:cfracWykres}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1.0\textwidth]{cfracWydajnoscTabela.png}
+    \caption{Dane pomiarów wydajność algorytmu CFRAC}
+    \label{fig:cfracTabela}
+\end{figure}
+\paragraph{}Badania przeprowadzone zostały na pojedyńczym komputerze wykorzystując symulację mpi dla danej ilości wątków.
 
 \section{Wnioski}
 
@@ -187,6 +255,18 @@ Wybór padl na ten jezyk ze wzgledu na jego znajomosc przez czlonków grupy oraz
 \bibitem{rsafactoringchallenge}
 	\emph{RSA Factoring Challenge}.
 	\url{http://pl.wikipedia.org/wiki/RSA_Factoring_Challenge}
+	
+\bibitem{cfracwiki}
+	\emph{CFRAC opis}.
+	\url{https://en.wikipedia.org/wiki/Continued_fraction_factorization}
+
+\bibitem{cfracinz}
+	\emph{CFRAC zastosowanie}.
+    \url{http://ki.agh.edu.pl/sites/default/files/usefiles/172/theses/mateusz.niezabitowski.algorytmy.faktoryzacji.w.zastosowaniach.kryptograficznych.v1.0-final.pdf}
+    
+\bibitem{cfracimpl}
+	\emph{CFRAC implementacja}.
+    \url{https://math.dartmouth.edu/~carlp/PDF/implementation.pdf}
 
 \end{thebibliography}
 
