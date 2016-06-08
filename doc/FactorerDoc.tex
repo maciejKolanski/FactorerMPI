@@ -319,7 +319,41 @@ admin.site.register(Task, TaskAdmin)
 Klasa musi dziedziczyć po klasie admin.ModelAdmin, następnie można zdefiniować sposób wyświetlania danych, pola, po których ma być realizowane wyszukiwanie, czy też listę filtrów. Na końcu trzeba zarejestrować taką klasę dla danej encji.
 
 \section{Dokumentacja powykonawcza (instalacyjna)}
- 
+
+\subsection{Uruchamianie strony}
+
+W celu uruchomienia strony potrzebny jest serwer wraz z zainstalowaną powłoką Python 3.4. Do tego należy zainstalować moduł Django w wersji 1.8.7. Oprócz powyższych należy też mieć serwer bazy danych, w przypadku tego projektu jest to serwer MySQL. Po spełnieniu tych wymagań można przejść do uruchamiania strony.\\
+
+Pierwszym krokiem jest ustawienie w opcjach strony w pliku settings.py danych dostępowych do bazy danych.
+\begin{lstlisting}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'factorDB',
+        'USER': 'projekt',
+        'PASSWORD': 'projekt',
+        'HOST': '156.17.235.48',
+        'PORT': '3306',
+    }
+}
+\end{lstlisting}
+
+Następnym krokiem jest wypełnienie bazy danych odpowiednimi strukturami stworzonymi wcześniej w Python używająć rozwiązania typu ORM. Służy do tego skrypt manage.py znajdujacy się w folderze z plikami źródłowymi strony. Należy zrobić migrację bazy danych dla naszej aplikacji(nazwa to FactorerMain). Osiąga sie to przez wywołanie \textbf{python manage.py makemigrations FactorerMain}. Następnie koniecznym jest wykonać utworzone migrację poprzez \textbf{python manage.py migrate}. Dzięki tym dwóm komendom baza danych zostanie wypełniona odpowiednio zdefiniowanymi strukturami. Ostatnim krokiem jest uruchomienie serwera, osiąga się to przez użycie kolejnej komendy skryput manage.py - \textbf{python manage.py runserver}.
+\begin{lstlisting}
+$ python manage.py runserver
+Performing system checks...
+
+System check identified no issues (0 silenced).
+
+June 08, 2016 - 16:24:25
+Django version 1.8.7, using settings 'Factorer.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+\end{lstlisting}
+
+Jak widać na powyższym wyciągu z terminala serwer został uruchominy.
+
 \section{Istotne elementy kodu z komentarzem}
 
 \section{Przykładowe wyniki badań efektywności programu równeległego}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.4.9)  7 JUN 2016 18:59
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2016.4.9)  8 JUN 2016 18:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -598,7 +598,7 @@ LaTeX Font Info:    External font `plex10' loaded for size
 \openout4 = `FactorerDoc.toc'.
 
  [1] [2]
-<schemat_blokowy_systemu.png, id=113, 782.925pt x 456.5055pt>
+<schemat_blokowy_systemu.png, id=118, 782.925pt x 456.5055pt>
 File: schemat_blokowy_systemu.png Graphic file (type png)
 
 <use schemat_blokowy_systemu.png>
@@ -631,7 +631,7 @@ Overfull \hbox (9.5806pt too wide) in paragraph at lines 134--135
 ga-ni-zo-wa-ne przez RSA Se-cu-ri-ty. Otwar-
  []
 
-[4] [5] <mainpage.png, id=157, 1006.76125pt x 698.61pt>
+[4] [5] <mainpage.png, id=162, 1006.76125pt x 698.61pt>
 File: mainpage.png Graphic file (type png)
  <use mainpage.png>
 Package pdftex.def Info: mainpage.png used on input line 168.
@@ -647,7 +647,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 216--217
 
  []
 
-[7] <userpage.png, id=225, 845.1575pt x 606.265pt>
+[7] <userpage.png, id=230, 845.1575pt x 606.265pt>
 File: userpage.png Graphic file (type png)
  <use userpage.png>
 Package pdftex.def Info: userpage.png used on input line 241.
@@ -657,7 +657,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 274--275
 
  []
 
-<adminpage.png, id=243, 1176.395pt x 673.51625pt>
+<adminpage.png, id=248, 1176.395pt x 673.51625pt>
 File: adminpage.png Graphic file (type png)
  <use adminpage.png>
 Package pdftex.def Info: adminpage.png used on input line 303.
@@ -666,39 +666,44 @@ Package pdftex.def Info: adminpage.png used on input line 303.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-[9] [10 <./adminpage.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 337--340
+[9]
+Underfull \hbox (badness 10000) in paragraph at lines 325--326
+
+ []
+
+[10 <./adminpage.png>] [11]
+Underfull \hbox (badness 10000) in paragraph at lines 371--374
 []\OT4/cmr/m/it/10 Dokumentacja MPICH2\OT4/cmr/m/n/10 . []$\OT4/cmtt/m/n/10 htt
 p : / / www . mpich . org / documentation /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 346--348
+Underfull \hbox (badness 10000) in paragraph at lines 380--382
 []\OT4/cmr/m/it/10 RSA Fac-to-ring Chal-len-ge\OT4/cmr/m/n/10 . []$\OT4/cmtt/m/
 n/10 http : / / pl . wikipedia . org / wiki / RSA _
  []
 
 
-Underfull \hbox (badness 4132) in paragraph at lines 358--360
+Underfull \hbox (badness 4132) in paragraph at lines 392--394
 []\OT4/cmr/m/it/10 ORM - object-relational map-ping\OT4/cmr/m/n/10 . []$\OT4/cm
 tt/m/n/10 https : / / pl . wikipedia . org / wiki /
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 367.
-[11]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 367.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 401.
+[12]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 401.
  (./FactorerDoc.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 367.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 367.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 401.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 401.
 Package rerunfilecheck Info: File `FactorerDoc.out' has not changed.
-(rerunfilecheck)             Checksum: 38606F74F0E879A8A88E007204C7B727;992.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 367.
+(rerunfilecheck)             Checksum: 97B28885C6229170693524E3F7324690;1061.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 401.
  ) 
 Here is how much of TeX's memory you used:
- 8672 strings out of 493304
- 127076 string characters out of 6139872
+ 8726 strings out of 493304
+ 127738 string characters out of 6139872
  260217 words of memory out of 5000000
- 11869 multiletter control sequences out of 15000+600000
+ 11900 multiletter control sequences out of 15000+600000
  14906 words of font info for 42 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  36i,6n,40p,869b,1960s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -717,10 +722,10 @@ r7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/pl/plsy10.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/public/pl/plti10.pfb></usr/share/texlive/tex
 mf-dist/fonts/type1/public/pl/pltt10.pfb></usr/share/texlive/texmf-dist/fonts/t
 ype1/public/pl/pltt9.pfb>
-Output written on FactorerDoc.pdf (12 pages, 405113 bytes).
+Output written on FactorerDoc.pdf (13 pages, 409765 bytes).
 PDF statistics:
- 393 PDF objects out of 1000 (max. 8388607)
- 355 compressed objects within 4 object streams
- 161 named destinations out of 1000 (max. 500000)
- 141 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 429 PDF objects out of 1000 (max. 8388607)
+ 390 compressed objects within 4 object streams
+ 184 named destinations out of 1000 (max. 500000)
+ 149 words of extra memory for PDF output out of 10000 (max. 10000000)
 
