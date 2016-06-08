@@ -141,6 +141,29 @@ Wybór padl na ten jezyk ze wzgledu na jego znajomosc przez czlonków grupy oraz
 
 \subsection{Klaster obliczeniowy - Komunikacja}
 
+\paragraph{}Program realizujący obliczenia został zrealizowany w oparciu o architekturę Master-Slave, a użytkownik systemu może uruchamiać kolejne zadania poprzez komunikację z węzłem Master. W tym celu określony został interface {\it FactorerCommunictorInterface} i jego dwie implementacje, z których jedna służy do komunikacji z klastrem przy użyciu konsoli (uruchomienie programu z parametrem cmd), a druga z bazą danych (stroną internetową). Metoda {\it getCommand} pobiera polecenie (od użytkównika lub bazy danych), a {\it algorithmFinished} przesyła wynik obliczeń. Takie podejście pozwala na abstrakcyjne podejście do tematu komunikacji - algorytm nie jest powiązany z bazą lub stroną internetową i z łatwością można dodać implementację pobierającą danę z innego źródła. 
+
+\begin{lstlisting}[caption=Interface wykorzystany do komunikacji]
+enum CommunicatorCommand{Quit, Algorithm};
+
+class FactorerCommunicatorInterface
+{
+public:
+    virtual ~FactorerCommunicatorInterface() {};
+
+    virtual CommunicatorCommand getCommand(MPIAlgorithm::AlgorithmsEnum &algorithm, std::string &number ) = 0;
+    virtual void algorithmFinished(const std::vector<std::string> &result) = 0;
+
+    static std::string commandAsString(CommunicatorCommand command) 
+\end{lstlisting}
+
+\paragraph{}Najważniejszym dla projektu sposobem komunikacji jest implementacje łącząca klaster z bazą danych - to ona umożliwia zlecanie zadań z poziomu strony internetowej. W trakcie realizacji projektu rozważano także podejście wykorzystujące bezpośrednie połączenie pomiędzy serwerem strony, a węzłem master, zdecydowano się jednak na wykorzystanie pośredniczącej bazy danych z następujących przyczyn:
+\begin{itemize}
+\item Użycie Django właściwie wymaga wykorzystania bazy danych do przechowywania danych, więc element musiał pojawić się w projekcie.
+\item Jednocześnie Django zapewnia bardzo dobre wsparcie w komunikacji z bazą danych.
+\item Podejście tego typu zapewnia modularność - do systemu można dodać klienta innego typu niż strona WWW (np. aplikację mobilną) z zerowym kosztem, dane byłby przesyłane do bazy dokładnie w ten sam sposób, sam klaster nie musi znać ich źródła.
+\item Liczba klastrów także staje się nieograniczony, każdy może pobierać wolne zadanie z bazy danych w dowolnej chwili.
+\end{itemize}
 
 \subsection{Klaster obliczeniowy - Algorytm Brute Force}
 
