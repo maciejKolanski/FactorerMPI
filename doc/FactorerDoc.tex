@@ -1,15 +1,13 @@
 \documentclass{article}
 
-\usepackage[utf8]{inputenc}
 \usepackage{polski}
 \usepackage[utf8]{inputenc}
 \usepackage{listings}
 \usepackage{caption}
 \usepackage{color}
 \usepackage{graphicx}
-\usepackage{listings}
 \usepackage{hyperref}
-\usepackage{amsmath}
+
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -127,7 +125,7 @@ Wybór padl na ten jezyk ze wzgledu na jego znajomosc przez czlonków grupy oraz
 \item Hosting plików - GitHub (\url{https://github.com/}) 
 \end{itemize}
 
-\section{Aktualny stan rynku\cite{cfracinz}}
+\section{Aktualny stan rynku}
 
 \paragraph{GGNFS (GPL'd implementation of General Number Field Sieve)} Aktywny rozwój. faktoryzacja liczb do 180 znaków, srednio do 140. Kilka wiekszych liczb tez. W wiekszosci przypadkow program GGNFS jest stabilny dla liczb skladajacych sie do 150-160 znakow. Posiada bugi. Nie jest czarna skrzynka, trzeba miec odpowiednia wiedze zeby go uzywać.
 
@@ -135,129 +133,31 @@ Wybór padl na ten jezyk ze wzgledu na jego znajomosc przez czlonków grupy oraz
 
 \paragraph{RSA Factoring Challenge} Zawody zorganizowane przez RSA Security. Otwarte zawody dla wszystkich mające na celu zwiększyć zainteresowanie faktoryzacją liczb. Opublikowana została lista pseudopierwszych liczb (rozkładających się na dokładnie dwa czynniki), nazwanych liczbami RSA.Za rozłożenie niektórych z nich wyznaczono pieniężną nagrodę. Najmniejsza z nich, 100-cyfrowa liczba RSA-100 została rozłożona w ciągu kilku dni, ale większość do dziś pozostaje niezłamana.Zawody miały na celu śledzenie rozwoju możliwości komputerów w faktoryzacji. Jest to niezwykle istotne przy wyborze długości klucza w szyfrowaniu asymetrycznym metodą RSA. Postęp w łamaniu kolejnych liczb powinien zdradzać jakie długości klucza można jeszcze uznawać za bezpieczne.\cite{rsafactoringchallenge}
 
-\paragraph{}Poczatkowo rekordy były bite za pomoca algorytmu CFRAC, który ustapił dopiero w latach 8X algorytmowi sita kwadratowego. Za pomoca algorytmu QS sfaktoryzowano, miedzy innymi, liczby $RSA-100, RSA-110, RSA-120 i RSA-129$. Następnie na scene wkroczył algorytm sita ciałliczbowego, który do dzis pozostaje najszybszym ze znanych algorytmów faktoryzacji i dzierży rekordy - najpierw RSA-640 (640 bitów, 193 cyfry) i RSA-200 (200 cyfr) w 2005 roku, a następnie RSA-768(232 cyfry) w 2009 roku, co pozostaje niepobitym rekordem do dzis.
+%Poczatkowo rekordy były bite za pomoca algorytmu CFRAC, który ustapił dopiero w latach 8XX w. algorytmowi sita kwadratowego. Za pomoca algorytmu QS sfaktoryzowano, miedzy innymi,liczby RSA-100, RSA-110, RSA-120 i RSA-129 [5]. Nast˛epnie na scen˛e wkroczył algorytm sita ciałliczbowego, który do dzis pozostaje najszybszym ze znanych algorytmów faktoryzacji i dzier ´ zy rekordy - najpierw RSA-640 (640 bitów, 193 cyfry) i RSA-200 (200 cyfr) w 2005 roku, a nast˛epnie RSA-768(232 cyfry) w 2009 roku, co pozostaje niepobitym rekordem do dzis.
+
+%praca mgr Mateusz Niezabitkowski http://ki.agh.edu.pl/sites/default/files/usefiles/172/theses/mateusz.niezabitowski.algorytmy.faktoryzacji.w.zastosowaniach.kryptograficznych.v1.0-final.pdf
+
+%Implementacje (eng wiki) : Some implementations focus on a certain smaller class of numbers. These are known as special number field sieve techniques, such as used in the Cunningham project. A project called NFSNET ran from 2002[6] through at least 2007. It used volunteer distributed computing on the Internet.[7] Paul Leyland of the United Kingdom and Richard Wackerbarth of Texas were involved.[8]
+
+%Until 2007, the gold-standard implementation was a suite of software developed and distributed by CWI in the Netherlands, which was available only under a relatively restrictive license. In 2007, Jason Papadopoulos developed a faster implementation of final processing as part of msieve, which is in the public domain. Both implementations feature the ability to be distributed among several nodes in a cluster with a sufficiently fast interconnect.
+
+%Polynomial selection is normally performed by GPL software written by Kleinjung, or by msieve, and lattice sieving by GPL software written by Franke and Kleinjung; these are distributed in GGNFS.
+
+%NFS@Home GGNFS pGNFS factor by gnfs CADO-NFS msieve, which contains excellent final-processing code, a good implementation of the polynomial selection which is very good for smaller numbers, and an implementation of the line sieve. kmGNFS
+
+%ElvenSmooth - projekt (... jeszcze nie doczytalem o nim dokladnie) http://home.earthlink.net/~elevensmooth/
+
+%Factorizations of Cyclotomic Numbers http://www.asahi-net.or.jp/~KC2H-MSM/cn/
 
 \section{Projekt techniczny}
 
-\subsection{Klaster obliczeniowy - Komunikacja}
+\subsection{Klaster obliczeniowy}
 
-\paragraph{}Program realizujący obliczenia został zrealizowany w oparciu o architekturę Master-Slave, a użytkownik systemu może uruchamiać kolejne zadania poprzez komunikację z węzłem Master. W tym celu określony został interface {\it FactorerCommunictorInterface} i jego dwie implementacje, z których jedna służy do komunikacji z klastrem przy użyciu konsoli (uruchomienie programu z parametrem cmd), a druga z bazą danych (stroną internetową). Metoda {\it getCommand} pobiera polecenie (od użytkównika lub bazy danych), a {\it algorithmFinished} przesyła wynik obliczeń. Takie podejście pozwala na abstrakcyjne podejście do tematu komunikacji - algorytm nie jest powiązany z bazą lub stroną internetową i z łatwością można dodać implementację pobierającą danę z innego źródła. 
+\paragraph{Komunikacja}
 
-\begin{lstlisting}[caption=Interface wykorzystany do komunikacji]
-enum CommunicatorCommand{Quit, Algorithm};
+\paragraph{Algorytm Brute Force}
 
-class FactorerCommunicatorInterface
-{
-public:
-    virtual ~FactorerCommunicatorInterface() {};
-
-    virtual CommunicatorCommand getCommand(MPIAlgorithm::AlgorithmsEnum &algorithm, std::string &number ) = 0;
-    virtual void algorithmFinished(const std::vector<std::string> &result) = 0;
-
-    static std::string commandAsString(CommunicatorCommand command) 
-\end{lstlisting}
-
-\paragraph{}Najważniejszym dla projektu sposobem komunikacji jest implementacje łącząca klaster z bazą danych - to ona umożliwia zlecanie zadań z poziomu strony internetowej. W trakcie realizacji projektu rozważano także podejście wykorzystujące bezpośrednie połączenie pomiędzy serwerem strony, a węzłem master, zdecydowano się jednak na wykorzystanie pośredniczącej bazy danych z następujących przyczyn:
-\begin{itemize}
-\item Użycie Django właściwie wymaga wykorzystania bazy danych do przechowywania danych, więc element musiał pojawić się w projekcie.
-\item Jednocześnie Django zapewnia bardzo dobre wsparcie w komunikacji z bazą danych.
-\item Podejście tego typu zapewnia modularność - do systemu można dodać klienta innego typu niż strona WWW (np. aplikację mobilną) z zerowym kosztem, dane byłby przesyłane do bazy dokładnie w ten sam sposób, sam klaster nie musi znać ich źródła.
-\item Liczba klastrów także staje się nieograniczony, każdy może pobierać wolne zadanie z bazy danych w dowolnej chwili.
-\end{itemize}
-
-\subsection{Klaster obliczeniowy - Algorytm Brute Force}
-\subsubsection{Opis algorytmu}
-\paragraph{}Zaimplementowany algorytm przeglądu zupełnego polega na wyznaczeniu maksymalnej wartości czynnika - czyli $\sqrt{n}$ i określenie zestawu przedziałów. Następnie każdy węzeł wykonawczy otrzymuje przedział $[x,y], x > 1, y <= \sqrt{n}$ i testuje, czy któraś liczba z tego przedziału dzieli się bez reszty przez $n$. Jeśli tak, algorytm znalazł dwa czynniki określające szukaną liczbę, następuję przerwanie i rekurencyjne wywołanie algorytmu dla znalezionych elementów. Do obliczeń i reprezentacji dużych liczb (większych niż 128 bitów) wykorzystano bibliotekę GMP\cite{gmplib}.
-
-\subsection{Implementacja algorytmu}
-\paragraph{}Właściwy kod wykonujący obliczenia korzysta z szeregu funkcji bibliotecznych GMP. Każda liczba z przedziału jest testosowana, jeśli dzieli zadaną (główną) liczbę bez reszty, algorytm jest kończony, a wynik przesyłany do węzła Master poprzez komunikat MPI.
-\begin{lstlisting}[caption=Algorytm Slave'a szukający liczb dzielącej w zadanym przedziale]
-void BruteForceAlgorithm::runSlaveAlgorithm(mpz_t left, mpz_t right)
-{
-    mpz_t mod, q;
-    mpz_init(mod);
-    mpz_init(q);
-    char *buff = new char[getMaxDigits()];
-
-    while( mpz_cmp(left,right) <= 0 )
-    {
-        mpz_cdiv_qr(q,mod,_value,left);
-        if(  mpz_cmp_ui(mod,0) == 0 )
-        {
-            getString(left,buff);
-            MPI_Send(buff,getMaxDigits(),MPI_CHAR,0,FIRSTRES_TAG,MPI_COMM_WORLD);
-
-            getString(q,buff);
-            MPI_Send(buff,getMaxDigits(),MPI_CHAR,0,SECRES_TAG,MPI_COMM_WORLD);
-            break;
-        }
-        mpz_add_ui(left,left,1);
-    }
-    delete buff;
-}
-\end{lstlisting}
-
-
-\subsection{Klaster obliczeniowy - Algorytm CFRAC}
-\subsubsection{Opis algorytmu\cite{cfracwiki}\cite{cfracinz}}
-\paragraph{}Metoda CFRAC  jest algorytmem faktoryzacji liczb całkowitych. Jest to uniwersalny algorytm będący w stanie rozłożyć na czynniki każdą liczbę, nie polegając na żadnych ograniczeniach czy warunkach. Został on opisany przez D.H. Lehmer'a oraz R. E. Powers'a w 1931 roku, oraz wdrożony na komputery pierwszy raz przez Michael'a A. Morisson'a oraz John'a Brillhart'a w 1975 roku.
-
-\paragraph{}Algorytm ten bazuje na metodzie faktoryzacji Diaxona. Metoda Diaxona polegała na losowaniu kolejnych liczb 'a' takie, że:
-$sqrt[n] < a < n$ (gdzie n to liczba, którą chcemy sfaktoryzować)
-i sprawdzamy(używając algorytmu naiwnego), czy $b^2 = a^2mod(n)$ jest liczbą B-gładką, dla ustalonego B. Jeżeli tak to dodajemy znalezioną parę do zbioru (liczba B-gładka to taka liczba, której wszystkie dzielniki pierwsze są mniejsze bądź równe dla ustalonego B).
-
-\paragraph{}W algorytmie CFRAC idea pozostaje bez zmian, definiowany jest natomiast sposób wybierania par. Zamiast losowania ich wykorzystywany jest ciąg rozwinięcia sqrt(n) w ułamek łańcuchowy. Złożoność obliczeniowa algorytmu CFRAC jest rzędu $O(e^{\sqrt{2*\log{n}* \log{\log{n}}}})$.
-
-\subsubsection{Implementacja\cite{cfracimpl}}
-\paragraph{}Program generuję rekurencyjnie elementy tablicy, której elementy są ze sobą ściśle powiązane, następującymi wzorami:
-
-\begin{align*}
-Q[n] &= Q[n-2] + q[n-1] * (r[n-1] - r[n-2])\\
-G[n] &= 2g - r[n-1]\\
-q[n] &= \frac{G[n]}{Q[n]}\\
-r[n] &= G[n] - q[n]\\
-A[n] &= q[n]*A[n-1] + A[n-2]modN
-\end{align*}
-
-gdzie:\begin{align*}
-Q[-1]&= N\\Q[0] = 1\\ q[0] = g\\r[-1] = g\\r[0] = 0\\
-A[-1]&= 1\\A[0] = g\\g = \sqrt{N}
-\end{align*}	
-\paragraph{}Dla powyższych reguł generowane są rekurencyjnie kolejne rekordy. Przy wygenerowaniu każdego kolejnego "zestawu" wyników badany był element Q[i]. Jeżeli był on możliwy do spierwiastkowania(reszta z pierwiastka kwadratowego jego wartości była równa zeru), to następnym krokiem w celu uzyskania szukanego faktora było obliczenie następującej wartości:
-
-$temp = A[i-1] - \sqrt{Q[i]}$
-
-\paragraph{}Ostatnim krokiem było obliczenie NWD (największego wspólnego dzielnika)pomiędzy uzyskaną wartością (temp), a liczbą dla której szukamy faktora(N). Wykorzystanym algorytmem do obliczania NWD był algorytm euklidesa, który jest aktualnie najefektywniejszym algorytmem wykorzystywanym do tej operacji.
-
-\subsubsection{Podział zadań (Master Slave)}
-
-\paragraph{}Z powodu rekurencyjnego generowania wyników, efektywny podział pracy pomiędzy różne maszyny(slave'y) był bardzo ciężki do zrealizowania. Ostatecznie udało nam się wymyślić sposób podziału prac, który może nie jest najlepszy ale zapewnia w pewnym stopniu poprawe wydajności przy wykorzystaniu wielu maszyn.
-
-\paragraph{}Polega on na wprowadzeniu do algorytmu parametru K. Dla każdej maszyny oprócz danej liczby do faktoryzacji wysyłamy również indywidualny dla niej parametr, przez który mnoży on otrzymaną liczbę do faktoryzacji. Dla nowej uzyskanej liczby k*N, algorytm znajduję wyniki w innym czasie. Wadą tego rozwiązania jest nie zawsze poprawny wynik, dlatego po jego odebraniu trzeba sprawdzić jego poprawność (np odrzucić wyniki, które dzielą się przez k)
-
-\paragraph{}Należy też wspomnieć, że CFRAC jest efektywnym algorytmem tylko dla dużych liczb, dlatego w celu znacznego skrócenia czasu operacji mniejsze liczby faktoryzowane są prostym algorytmem naiwnym przez maszyne Master.
-
-\paragraph{}Algorytm podziału zadań przez maszyna Master wygląda w następujący sposób:
-
-\begin{lstlisting}[caption=Sekwencja instrukcji algorytmu CFRAC,numbers=left]
-    Utworz kolejke na wynik
-    Wrzuc pierwsza liczbe (N) do kolejki liczb do faktoryzacji
-    Dopoki kolejka nie jest pusta 
-        Dopoki nie znalazles ostatniej liczby pierwszej
-            Wyciagnij liczbe A z kolejki 
-            Jezeli A jest liczba duza //(efektywny CFRAC) 
-                Zainicjuj maszyny (Slaves) 
-                Rozeslij zadania wraz z indywidualnym parametrem K 
-                Wyrzuc aktualna liczbe A z kolejki 
-                Wykonuj dopoki nie odbierzesz wynikow od wszystkich maszyn 
-                    Czekaj na wynik 
-                    Sprawdz jego poprawnosc 
-                    Jezeli wynik jest poprawny: 
-                        Jezeli jest liczba pierwsza, wrzuc do kolejki wynikow
-                        Jezeli nie jest liczba pierwsza wrzuc go oraz jego iloraz z liczba A do kolejki liczb do faktoryzacji 
-                    Jezeli zadna maszyna nie zwrocila poprawnego wyniku, zmien parametr k i wrzuc z powrotem liczbe A do kolejki liczb do faktoryzacji 
-            Dla malej liczby uzyj algorytmu naiwnego (bruteforce)
-\end{lstlisting}
+\paragraph{Algorytm CFRAC}
 
 \subsection{Strona internetowa}
 
@@ -272,7 +172,7 @@ Dostępna w sieci Internet strona WWW finalnie umożliwia rejestrację i logowan
 
 Stronę wykonano przy użyciu technologii Python Django\cite{django} i edytora tekstowego Sublime\cite{sublime} wraz z dodatkiem Anaconda Python IDE\cite{anacondaide}. Do komunikacji z bazą danych wykorzystano standardową bibliotekę do połączenia z MySQL dostępną w Django. Baza danych została stworzona przy pomocy ORM\cite{orminfo} także standardowego dla Django. Przykładowy kod dla encji Task poniżej.
 
-\begin{lstlisting}[caption=Przykładowa implementacja encji w kodzie Python,numbers=left]
+\begin{lstlisting}
 class Task(models.Model):
     CANCELLED_STATUS = -1
     UNDONE_STATUS = 0
@@ -301,7 +201,7 @@ Kolejne kolumny danej tabeli w bazie danych są tworzone poprzez definiowanie p�
 
 W celu utworzenia nowej podstrony definiuje się klasy dziedziczące po klasie View z Django. Poniżej znajduje się kod dla widoku podstrony z zadaniami użytkownika.
 
-\begin{lstlisting}[caption=Klasa widoku obsługująca podstronę,numbers=left]
+\begin{lstlisting}
 class UserView(LoggedInMixin, View):
     template_name = 'FactorerMain/userview.html'
 
@@ -317,7 +217,7 @@ W tym przypadku UserView dziedziczy również po klasie LoggedInMixin odpowiadaj
 
 Można tak pobrane dane z bazy użyć w HTML i wyświetlić je na stronie. Kod wygląda następująco:
 
-\begin{lstlisting}[caption=Szablon HTML używający odczytane dane z bazy,numbers=left]
+\begin{lstlisting}
 <h2>Moje zadania:</h2>
 {% if tasks %}
     {% for task in tasks %}
@@ -345,7 +245,7 @@ Pierw sprawdzane jest czy w kontekście została przekazana zmienna tasks. Nast�
 
 W Django zazwyczaj definiuje się jeden bazowy szablon w postaci pliku HTML, a następnie na podstronach zastępuje się tylko wyróżnione bloki strony w sposób wyspecyfikowany dla danej podstrony. Uzyskuje się to przez rozszerzanie szablonów. Dla przykładu w główny pliku HTML znajduje się następujący fragment:
 
-\begin{lstlisting}[caption=Fragment głównego szablonu strony,numbers=left]
+\begin{lstlisting}
  <div id="portfolio-samples">
     <div class="wrap clearfix">
         {% block gallery %}
@@ -356,7 +256,7 @@ W Django zazwyczaj definiuje się jeden bazowy szablon w postaci pliku HTML, a n
 
 W tym kodzie zdefiniowano blok gallery, można go zastąpić przy pomocy poniższego fragmentu na innej stronie. 
 
-\begin{lstlisting}[caption=Fragment podstrony rozszerzającej bazowy szablon,numbers=left]
+\begin{lstlisting}
 {% extends 'base.html' %}
 
 {% block gallery %}
@@ -375,7 +275,7 @@ Poza blokiem gallery reszta strony będzie taka jak zdefiniowano w pliku base.ht
 
 W celu połączenia wszystkiego należy zdefiniować jeszcze w pliku urls.py odwzorowania adresów url dla odpowiednich stron, dzięki czemu Django uruchamia odpowiednie klasy widoków dla zadanego adresu.
 
-\begin{lstlisting}[caption=Definicja adresów URL,numbers=left]
+\begin{lstlisting}
 urlpatterns = [
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^userview/?$', views.UserView.as_view(), name='userview'),
@@ -407,7 +307,7 @@ Do zadań administracyjnych został wykorzystany standardowy panel Django admini
 
 Panel modyfikuje się poprzez edycję pliku admin.py.
 
-\begin{lstlisting}[caption=Klasa konfigurująca panel administratora,numbers=left]
+\begin{lstlisting}
 class TaskAdmin(admin.ModelAdmin):
     list_display = ('number_to_factor', 'job_date', 'state', 'priority', 'result', 'user', 'algorithm')
     search_fields = ['user__username']
@@ -418,10 +318,10 @@ admin.site.register(Task, TaskAdmin)
 
 Klasa musi dziedziczyć po klasie admin.ModelAdmin, następnie można zdefiniować sposób wyświetlania danych, pola, po których ma być realizowane wyszukiwanie, czy też listę filtrów. Na końcu trzeba zarejestrować taką klasę dla danej encji.
 
+\newpage
 \section{Dokumentacja powykonawcza (instalacyjna)}
-
-\subsection{Uruchomienie klastra}
-\subsubsection{Wymagania systemowe}
+ 
+\subsection{Wymagania systemowe}
 
 System posiada następujące wymagania programowe:
 \begin{itemize}
@@ -434,7 +334,7 @@ System posiada następujące wymagania programowe:
  
 Minimalne wymagania sprzętowe nie zostały sprecyzowane, system powinien się uruchomić na dowolnej konfiguracji z zainstalowanym powyższym oprogramowaniem. Niezbędne jest, aby wszystkie maszyny tworzące klaster były umieszczone w jednej sieci LAN pracującej w technologii FastEthernet lub wyższej. Dodatkowo węzeł główny musi posiadać połączenie z Internetem w celu komunikacji z bazą danych.
 
-\subsubsection{Konfiguracja systemu}
+\subsection{Konfiguracja systemu}
 Aby uruchomić system na docelowej grupie maszyn należy wykonać następujące kroki:
 \begin{itemize}
 \item zmapować adresy ip maszyn w pliku systemowym \textit{/etc/hosts}
@@ -445,7 +345,7 @@ Aby uruchomić system na docelowej grupie maszyn należy wykonać następujące 
 \item uruchomić plik za pomocą komendy \textit{mpirun}
 \end{itemize}
 \newpage
-\paragraph{Edycja pliku \textit{hosts}}
+\subsubsection{Edycja pliku \textit{hosts}}
 
 Plik znajduje się w katalogu /etc. Należy edytować go w dowolnym edytorze tekstu i przypisać lokalne adresy ip do nazw hostów. Przykładowy plik:
 \begin{lstlisting}
@@ -465,7 +365,7 @@ ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 \end{lstlisting}
 
-\paragraph{Tworzenie nowego użytkownika}
+\subsubsection{Tworzenie nowego użytkownika}
 
 Aby utworzyć nowego użytkownika należy wykonać następującą komendę z uprawnieniami administratora:
 \begin{lstlisting}
@@ -474,7 +374,7 @@ $ sudo adduser mpiuser
 
 Krok należy powtórzyć na każdym węźle.
 
-\paragraph{Utworzenie folderu współdzielonego i udostępnienie go w sieci}
+\subsubsection{Utworzenie folderu współdzielonego i udostępnienie go w sieci}
 Po zalogowaniu na konto \textit{mpiuser} należy dokonać następujących kroków:
 
 Na głównym węźle:
@@ -514,7 +414,7 @@ Filesystem                  Size  Used Avail Use% Mounted on
 master:/home/mpiuser/cloud  49G   15G   32G  32% /home/mpiuser/cloud
 \end{lstlisting}
 
-\paragraph{Tworzenie bezhasłowego połączenia SSH}
+\subsubsection{Tworzenie bezhasłowego połączenia SSH}
 Poniższe kroki należy wykonać na każdym węźle.
 
 Generacja pary kluczy - publicznego i prywatnego:
@@ -523,11 +423,11 @@ $ ssh-keygen -t dsa
 \end{lstlisting}
 
 Przesłanie klucza publicznego z węzła głównego na obliczeniowe i na odwrót:
-\begin{lstlisting}
-$ ssh-copy-id master (na wezlach obliczeniowych)
-$ ssh-copy-id slave[i] (na wezle glownym)
-$ ssh-copy-id localhost (dodatkowo na kazdej maszynie)
-\end{lstlisting}
+%\begin{lstlisting}
+%$ ssh-copy-id master (na węzłach obliczeniowych)
+%$ ssh-copy-id slave[i] (na węźle głównym)
+%$ ssh-copy-id localhost (dodatkowo na każdej maszynie)
+%\end{lstlisting}
 
 Wyłączenie konieczności podawania hasła przy logowaniu SSH:
 \begin{lstlisting}
@@ -540,7 +440,7 @@ Należy przetestować połączenie pomiędzy węzłem głównym i każdym z obli
 $ ssh master (slave[i])
 \end{lstlisting}
 
-\paragraph{Uruchomienie pliku wykonywalnego}
+\subsubsection{Uruchomienie pliku wykonywalnego}
 Uruchomienie pliku wykonywalnego Factorer dokonuje się za pomocą komendy mpirun z określonymi parametrami. Przykładowe wywołanie:
 \begin{lstlisting}
 $ mpirun -np 4 -hosts master,slave1 ./Factorer
@@ -554,50 +454,27 @@ System składa się z 3 jednakowych maszyn obliczeniowych i węzła głównego. 
 \item -hosts \textit{hostname1},\textit{hostname2} ... - nazwy węzłów na których ma zostać uruchomiony program oddzielone przecinkami (bez spacji). Lista musi zawierać węzeł główny (master) oraz może zawierać dowolną liczbę węzłów obliczeniowych (slave).
 \end{itemize}
 
-\subsection{Uruchamianie strony}
+\section{Istotne elementy kodu z komentarzem}
 
-W celu uruchomienia strony potrzebny jest serwer wraz z zainstalowaną powłoką Python 3.4. Do tego należy zainstalować moduł Django w wersji 1.8.7. Oprócz powyższych należy też mieć serwer bazy danych, w przypadku tego projektu jest to serwer MySQL. Po spełnieniu tych wymagań można przejść do uruchamiania strony.\\
-
-Pierwszym krokiem jest ustawienie w opcjach strony w pliku settings.py danych dostępowych do bazy danych.
-\begin{lstlisting}
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'factorDB',
-        'USER': 'projekt',
-        'PASSWORD': 'projekt',
-        'HOST': '156.17.235.48',
-        'PORT': '3306',
-    }
-}
-\end{lstlisting}
-
-Następnym krokiem jest wypełnienie bazy danych odpowiednimi strukturami stworzonymi wcześniej w Python używająć rozwiązania typu ORM. Służy do tego skrypt manage.py znajdujacy się w folderze z plikami źródłowymi strony. Należy zrobić migrację bazy danych dla naszej aplikacji(nazwa to FactorerMain). Osiąga sie to przez wywołanie \textbf{python manage.py makemigrations FactorerMain}. Następnie koniecznym jest wykonać utworzone migrację poprzez \textbf{python manage.py migrate}. Dzięki tym dwóm komendom baza danych zostanie wypełniona odpowiednio zdefiniowanymi strukturami. Ostatnim krokiem jest uruchomienie serwera, osiąga się to przez użycie kolejnej komendy skryput manage.py - \textbf{python manage.py runserver}.
-\begin{lstlisting}
-$ python manage.py runserver
-Performing system checks...
-
-System check identified no issues (0 silenced).
-
-June 08, 2016 - 16:24:25
-Django version 1.8.7, using settings 'Factorer.settings'
-Starting development server at http://127.0.0.1:8000/
-Quit the server with CONTROL-C.
-
-\end{lstlisting}
-
-Jak widać na powyższym wyciągu z terminala serwer został uruchominy.
-
-\newpage
 \section{Przykładowe wyniki badań efektywności programu równeległego}
 
-Wydajność została przetestowana dla następujących parametrów:
+\textbf{Konfiguracja sprzętowa maszyn na których przeprowadzone zostały testy:}
+\begin{itemize}
+\item Procesor: Interl Core i7-2600K 3.40 GHz (wykorzystywane 2 rdzenie)
+\item Pamięć RAM: 4096 MB
+\item łącze sieciowe FastEthernet 100 Mbit/s
+\item maszyny witualne uruchamiane w środowisku Virtualbox 5.0.20
+\end{itemize}
+
+
+\textbf{Metodologia pomiarów:}
 \begin{itemize}
 \item faktoryzowana liczba - 1234567891011121314
 \item ilość powtórzeń pomiarów - 20, wyniki uśredniono
 \item ilość rdzeni na węzeł - 2
 \item ilości węzłów obliczeniowych - 1, 2, 3, 4
 \end{itemize}
+
 \subsection{Testy wydajności dla algorytmu Bruteforce}
 Wyniki w formie wykresu dla algorytmu Bruteforce:
 \begin{figure}[h!]
@@ -613,6 +490,7 @@ Algorytm faktoryzacji bruteforce posiada niekorzystną złożoność obliczeniow
     \caption{Bruteforce - prognozowane wyniki dla 14 maszyn}
     \label{fig:userpagescr}
 \end{figure}
+
 \newpage
 \subsection{Testy wydajności dla algorytmu CFRAC}
 Wyniki w formie wykresu dla algorytmu CFRAC:
@@ -630,27 +508,8 @@ Algorytm CFRAC implementuje o wiele wydajniejszą metodę factoryzacji. Wyniki u
     \caption{CFRAC - prognozowane wyniki dla 14 maszyn}
     \label{fig:userpagescr}
 \end{figure}
-
-\clearpage
-\subsection{Algorytm CFRAC - badania dodatkowe}
-\paragraph{}Badania przeprowadzone zostały na pojedyńczym komputerze wykorzystując symulację MPI dla danej ilości wątków.
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=1.0\textwidth]{cfracWydajnosc.png}
-    \caption{Wydajność algorytmu CFRAC dla poszczególnej liczby wątków}
-    \label{fig:cfracWykres}
-\end{figure}
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=1.0\textwidth]{cfracWydajnoscTabela.png}
-    \caption{Dane pomiarów wydajność algorytmu CFRAC}
-    \label{fig:cfracTabela}
-\end{figure}
-
+\newpage
 \section{Wnioski}
-\paragraph{}Stworzenie systemu przy użyciu kilku zupełnie różnych technologii okazało się być ciekawym i pouczającym zadaniem. Projekt pozwalał na zdobycie podstawowej wiedzy z zakresu budowy aplikacji sieciowych, wykorzystania baz danych i programowania algorytmów z użyciem architektury master - slave. 
-\paragraph{}Udało się zrealizować podstawowe założenia projektowe - system jest zdolny do działania z wykorzystanie interface'u użytkownika, instalacja systemu została przez nas opisana i nie wymaga ponownej kompilacji kodu programu.
-\paragraph{}Wykorzystanie MPICH2 okazało się być proste. System ten pozwala na stworzenie programu przy użyciu jednego komputera i następnia uruchomieniu na wielu niezależnych rdzeniach bez bezpośredniej ingerencji w kod programu. Nowoczesny framework Django umożliwił stworzenie aplikacji internetowej w bezproblemowy sposób.
 
 \newpage
 \begin{thebibliography}{9}
@@ -671,19 +530,6 @@ Algorytm CFRAC implementuje o wiele wydajniejszą metodę factoryzacji. Wyniki u
 \bibitem{rsafactoringchallenge}
 	\emph{RSA Factoring Challenge}.
 	\url{http://pl.wikipedia.org/wiki/RSA_Factoring_Challenge}
-	
-\bibitem{cfracwiki}
-	\emph{CFRAC opis}.
-	\url{https://en.wikipedia.org/wiki/Continued_fraction_factorization}
-
-\bibitem{cfracinz}
-	\emph{CFRAC zastosowanie}.
-	\author{Mateusz Niezabitowski}
-    \url{http://ki.agh.edu.pl/sites/default/files/usefiles/172/theses/mateusz.niezabitowski.algorytmy.faktoryzacji.w.zastosowaniach.kryptograficznych.v1.0-final.pdf}
-    
-\bibitem{cfracimpl}
-	\emph{CFRAC implementacja}.
-    \url{https://math.dartmouth.edu/~carlp/PDF/implementation.pdf}
 
 \bibitem{sublime}
   \emph{Sublime Text Editor}.
@@ -700,10 +546,6 @@ Algorytm CFRAC implementuje o wiele wydajniejszą metodę factoryzacji. Wyniki u
 \bibitem{djangomodels}
   \emph{Django Models documentation}.
   \url{https://docs.djangoproject.com/en/1.9/topics/db/models/}
-
-\bibitem{gmplib}
-  \emph{GMP Library}.
-  \url{https://gmplib.org/}
 
 \end{thebibliography}
 
