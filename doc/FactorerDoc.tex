@@ -7,6 +7,7 @@
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage[final]{pdfpages}
 
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
@@ -46,7 +47,7 @@
 
 %generowanie strony tytułowej
 \pagenumbering{gobble}
-\maketitle
+\includepdf[pages=-]{AIiR_strona_tytulowa.pdf}
 \newpage  
 \pagenumbering{arabic}
 
